@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Mediterranean Wedding Palette */
+    --background: 35 30% 97%;
+    --foreground: 25 20% 18%;
+
+    --card: 35 25% 95%;
+    --card-foreground: 25 20% 18%;
+
+    --popover: 35 30% 97%;
+    --popover-foreground: 25 20% 18%;
+
+    --primary: 25 45% 42%;
+    --primary-foreground: 35 30% 97%;
+
+    --secondary: 85 20% 82%;
+    --secondary-foreground: 25 20% 18%;
+
+    --muted: 35 20% 92%;
+    --muted-foreground: 25 10% 50%;
+
+    --accent: 38 60% 72%;
+    --accent-foreground: 25 20% 18%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 35 20% 88%;
+    --input: 35 20% 88%;
+    --ring: 25 45% 42%;
+
+    --radius: 0.5rem;
+
+    /* Custom wedding tokens */
+    --terracotta: 16 50% 55%;
+    --olive: 85 25% 45%;
+    --olive-light: 85 20% 82%;
+    --gold: 38 60% 55%;
+    --gold-light: 38 60% 72%;
+    --cream: 35 30% 97%;
+    --cream-dark: 35 25% 90%;
+    --sea: 195 50% 55%;
+    --sea-light: 195 40% 85%;
+
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Lora', serif;
+    --font-accent: 'Cormorant Garamond', serif;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  .wedding-section {
+    @apply py-20 md:py-28 px-6;
+  }
+
+  .wedding-container {
+    @apply max-w-5xl mx-auto;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    @apply text-3xl md:text-4xl lg:text-5xl font-medium tracking-wide text-foreground text-center mb-4;
+  }
+
+  .section-subtitle {
+    font-family: var(--font-accent);
+    @apply text-lg md:text-xl text-muted-foreground text-center mb-12 italic;
+  }
+
+  .wedding-divider {
+    @apply w-24 h-px bg-accent mx-auto my-8;
+  }
+
+  .card-wedding {
+    @apply bg-card rounded-lg p-8 md:p-10 shadow-sm border border-border;
+  }
+
+  .btn-wedding {
+    font-family: var(--font-accent);
+    @apply inline-flex items-center justify-center px-8 py-3 text-lg tracking-wider
+           bg-primary text-primary-foreground rounded-sm
+           transition-all duration-300
+           hover:opacity-90 hover:shadow-md;
+  }
+
+  .btn-wedding-outline {
+    font-family: var(--font-accent);
+    @apply inline-flex items-center justify-center px-8 py-3 text-lg tracking-wider
+           border-2 border-primary text-primary rounded-sm
+           transition-all duration-300
+           hover:bg-primary hover:text-primary-foreground;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
