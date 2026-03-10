@@ -76,14 +76,12 @@ const WeddingNav = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-2">
-          <button onClick={() => setLanguage("fr")} className={langButtonClass(language === "fr")}>
-            <span aria-hidden="true">🇫🇷</span>
-            <span>FR</span>
-          </button>
-          <button onClick={() => setLanguage("el")} className={langButtonClass(language === "el")}>
-            <span aria-hidden="true">🇬🇷</span>
-            <span>GR</span>
-          </button>
+         <button onClick={() => setLanguage("fr")} className={langButtonClass(language === "fr")} aria-label="Français">
+  <span aria-hidden="true">🇫🇷</span>
+</button>
+<button onClick={() => setLanguage("el")} className={langButtonClass(language === "el")} aria-label="Ελληνικά">
+  <span aria-hidden="true">🇬🇷</span>
+</button>
         </div>
 
         <button
