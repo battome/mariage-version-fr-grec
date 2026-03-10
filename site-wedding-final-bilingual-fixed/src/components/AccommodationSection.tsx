@@ -23,7 +23,8 @@ const AccommodationSection = () => {
               <div className="text-muted-foreground leading-relaxed space-y-4">
                 {t.accommodation.paragraphs.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
-                  <p key={paragraph} dangerouslySetInnerHTML={{ __html: paragraph }} />
+                {t.accommodation.paragraphs.map((paragraph, index) => (
+                  <p key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
                 ))}
 
                 <p>
