@@ -23,22 +23,18 @@ const TransportSection = () => {
                 <p>
                   <strong>{t.transport.taxiTitle}</strong>
                   <br />
-                  {t.transport.taxiText}
                   <span dangerouslySetInnerHTML={{ __html: t.transport.taxiText }} />
                 </p>
 
                 <p>
                   <strong>{t.transport.rentalTitle}</strong>
                   <br />
-                  {t.transport.rentalText}
                   <span dangerouslySetInnerHTML={{ __html: t.transport.rentalText }} />
                 </p>
-
-                <p>{t.transport.europcar}</p>
+                
                 <p dangerouslySetInnerHTML={{ __html: t.transport.europcar }} />
                 <p>{t.transport.downtown}</p>
                 <p>{t.transport.group}</p>
-                <p>{t.transport.help}</p>
                 <p dangerouslySetInnerHTML={{ __html: t.transport.help }} />
 
                 <p className="space-y-1">
