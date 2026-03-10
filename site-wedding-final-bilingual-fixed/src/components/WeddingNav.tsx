@@ -77,8 +77,10 @@ const WeddingNav = () => {
 
         <div className="hidden md:flex items-center gap-2">
          <button onClick={() => setLanguage("fr")} className={langButtonClass(language === "fr")} aria-label="Français">
+  <span aria-hidden="true">🇫🇷</span>
 </button>
 <button onClick={() => setLanguage("el")} className={langButtonClass(language === "el")} aria-label="Ελληνικά">
+  <span aria-hidden="true">🇬🇷</span>
 </button>
         </div>
 
