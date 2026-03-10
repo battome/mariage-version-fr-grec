@@ -95,7 +95,7 @@ const translations = {
       eyebrow: "Répondez",
       title: "Confirmer sa Présence",
       intro:
-        "Merci de nous confirmer votre présence avant le 17 mai 2027 afin que nous puissions organiser au mieux cette journée.",
+        "Merci de nous confirmer votre présence avant le 30 janvier 2027 afin que nous puissions organiser au mieux cette journée.",
       thankYouTitle: "Merci !",
       thankYouText:
         "Votre réponse a bien été envoyée. Nous avons hâte de vous retrouver à Athènes !",
