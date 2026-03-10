@@ -1,5 +1,3 @@
-import { CarTaxiFront } from "lucide-react";
-import transportImage from "@/assets/transport-athenes.jpg";
 import { useLanguage } from "@/lib/i18n";
 
 const TransportSection = () => {
@@ -26,18 +24,22 @@ const TransportSection = () => {
                   <strong>{t.transport.taxiTitle}</strong>
                   <br />
                   {t.transport.taxiText}
+                  <span dangerouslySetInnerHTML={{ __html: t.transport.taxiText }} />
                 </p>
 
                 <p>
                   <strong>{t.transport.rentalTitle}</strong>
                   <br />
                   {t.transport.rentalText}
+                  <span dangerouslySetInnerHTML={{ __html: t.transport.rentalText }} />
                 </p>
 
                 <p>{t.transport.europcar}</p>
+                <p dangerouslySetInnerHTML={{ __html: t.transport.europcar }} />
                 <p>{t.transport.downtown}</p>
                 <p>{t.transport.group}</p>
                 <p>{t.transport.help}</p>
+                <p dangerouslySetInnerHTML={{ __html: t.transport.help }} />
 
                 <p className="space-y-1">
                   <a href="https://www.europcar.fr/" target="_blank" rel="noopener noreferrer" className="block text-primary underline">
@@ -63,9 +65,3 @@ const TransportSection = () => {
             />
           </div>
         </div>
-      </div>
-    </section>
-  );
-};
-
-export default TransportSection;
