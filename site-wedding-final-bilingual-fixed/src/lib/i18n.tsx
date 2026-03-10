@@ -61,10 +61,10 @@ const translations = {
       eyebrow: "Séjour",
       title: "Hôtels & Airbnb",
       paragraphs: [
-        "Si vous souhaitez séjourner dans le centre d’Athènes, à proximité de la cérémonie religieuse, nous vous conseillons de choisir un hôtel dans les quartiers de Monastiraki, Plaka ou Syntagma. Si vous avez des questions sur d’autres quartiers, n’hésitez pas à nous les poser.",
-        "Si vous préférez être en bord de mer, mais donc plus éloignés du centre d’Athènes et du lieu du mariage, vous pouvez regarder du côté de Porto Rafti, Nea Makri, Vouliagmeni ou Glyfada. Dans ce cas, une voiture sera nécessaire pour vos déplacements.",
+        "Si vous souhaitez séjourner dans le centre d’Athènes, à proximité de la cérémonie religieuse, nous vous conseillons de choisir un hôtel dans les quartiers de <strong>Monastiraki</strong>, <strong>Plaka</strong> ou <strong>Syntagma</strong>. Si vous avez des questions sur d’autres quartiers, n’hésitez pas à nous les poser.",
+        "Si vous préférez être en bord de mer, mais donc plus éloignés du centre d’Athènes et du lieu du mariage, vous pouvez regarder du côté de <strong>Porto Rafti</strong>, <strong>Nea Makri</strong>, <strong>Vouliagmeni</strong> ou <strong>Glyfada</strong>. Dans ce cas, une voiture sera nécessaire pour vos déplacements.",
         "Si vous souhaitez être proches du lieu de la réception, vous pouvez séjourner à Koropi, Karellas, Profitis Ilias, Peania ou Spata. Là aussi, une voiture sera nécessaire.",
-        "Pour un logement plus économique tout en restant sur la ligne de métro reliant l’aéroport, vous pouvez regarder les quartiers de Agia Paraskevi ou Doukissis Plakentias.",
+        "Pour un logement plus économique tout en restant sur la ligne de métro reliant l’aéroport, vous pouvez regarder les quartiers de <strong>Agia Paraskevi</strong> ou <strong>Doukissis Plakentias</strong>.",
       ],
       bookingLead: "N’hésitez pas à consulter",
       bookingMiddle: "ou",
@@ -78,18 +78,18 @@ const translations = {
       imageAlt: "Location de voiture en Grèce",
       taxiTitle: "Taxis :",
       taxiText:
-        "Deux options s’offrent à vous : télécharger l’application Uber ou FREENOW, toutes deux très utilisées à Athènes.",
+        "Deux options s’offrent à vous : télécharger l’application <strong>Uber</strong> ou <strong>FREENOW</strong>, toutes deux très utilisées à Athènes.",
       rentalTitle: "Location de voiture :",
       rentalText:
-        "À l’aéroport d’Athènes, tous les loueurs de véhicules sont ouverts 24h/24 et 7j/7 (Europcar, Sixt, Hertz, Enterprise, etc.).",
+        "À l’aéroport d’Athènes, tous les loueurs de véhicules sont ouverts <strong>24h/24</strong> et <strong>7j/7</strong> (Europcar, Sixt, Hertz, Enterprise, etc.).",
       europcar:
-        "Nous vous conseillons Europcar, qui est dans la grande majorité des cas le plus avantageux.",
+        "Nous vous conseillons <strong>Europcar</strong>, qui est dans la grande majorité des cas le plus avantageux.",
       downtown:
         "Ces loueurs sont également présents dans le centre d’Athènes, mais les agences n’y sont généralement pas ouvertes 24h/24.",
       group:
         "N’hésitez pas à louer un véhicule à plusieurs (amis, famille, etc.). Il existe des voitures 4, 5 ou 9 places, notamment des vans, qui peuvent être une solution pratique.",
       help:
-        "N’hésitez pas à nous contacter si vous avez la moindre question, nous serons ravis de vous aider.",
+        "<strong>N’hésitez pas à nous contacter si vous avez la moindre question, nous serons ravis de vous aider.</strong>",
     },
     rsvp: {
       eyebrow: "Répondez",
