@@ -1,5 +1,5 @@
 import { CarTaxiFront } from "lucide-react";
-import transportImage from "@/assets/transport-athenes.jpg";
+import transportImage from "@/assets/photo-couple.jpg";
 import { useLanguage } from "@/lib/i18n";
 
 const TransportSection = () => {
