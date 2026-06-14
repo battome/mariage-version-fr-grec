@@ -12,6 +12,7 @@ const WeddingNav = () => {
     { label: t.nav.venue, href: "#le-lieu" },
     { label: t.nav.accommodation, href: "#hebergements" },
     { label: t.nav.transport, href: "#transport" },
+    { label: t.nav.game, href: "#jeu" },
     { label: t.nav.rsvp, href: "#rsvp" },
     { label: t.nav.contact, href: "#contact" },
   ];

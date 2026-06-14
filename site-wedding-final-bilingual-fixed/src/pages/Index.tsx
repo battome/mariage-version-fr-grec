@@ -4,6 +4,7 @@ import StorySection from "@/components/StorySection";
 import VenueSection from "@/components/VenueSection";
 import AccommodationSection from "@/components/AccommodationSection";
 import TransportSection from "@/components/TransportSection";
+import GameSection from "@/components/GameSection";
 import RSVPSection from "@/components/RSVPSection";
 import ContactSection from "@/components/ContactSection";
 import { LanguageProvider } from "@/lib/i18n";
@@ -14,6 +15,7 @@ const Index = () => {
       <div className="min-h-screen">
         <WeddingNav />
         <HeroSection />
+        <GameSection />
         <StorySection />
         <VenueSection />
         <AccommodationSection />

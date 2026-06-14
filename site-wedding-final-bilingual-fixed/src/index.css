@@ -7,32 +7,32 @@
 @layer base {
   :root {
     /* Mediterranean Wedding Palette */
-    --background: 35 30% 97%;
-    --foreground: 25 20% 18%;
+    --background: 36 38% 97%;
+    --foreground: 24 24% 16%;
 
-    --card: 35 25% 95%;
+    --card: 38 46% 96%;
     --card-foreground: 25 20% 18%;
 
     --popover: 35 30% 97%;
     --popover-foreground: 25 20% 18%;
 
-    --primary: 25 45% 42%;
+    --primary: 22 42% 38%;
     --primary-foreground: 35 30% 97%;
 
-    --secondary: 85 20% 82%;
+    --secondary: 96 18% 80%;
     --secondary-foreground: 25 20% 18%;
 
-    --muted: 35 20% 92%;
+    --muted: 36 24% 91%;
     --muted-foreground: 25 10% 50%;
 
-    --accent: 38 60% 72%;
+    --accent: 42 68% 70%;
     --accent-foreground: 25 20% 18%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 35 20% 88%;
-    --input: 35 20% 88%;
+    --border: 35 22% 84%;
+    --input: 35 22% 84%;
     --ring: 25 45% 42%;
 
     --radius: 0.5rem;
@@ -71,6 +71,9 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
+    background:
+      radial-gradient(circle at 12% 12%, hsl(var(--sea-light) / 0.45), transparent 28rem),
+      linear-gradient(180deg, hsl(var(--background)), hsl(var(--cream-dark) / 0.55) 48%, hsl(var(--background)));
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -80,16 +83,16 @@
 
 @layer components {
   .wedding-section {
-    @apply py-20 md:py-28 px-6;
+    @apply relative overflow-hidden py-20 md:py-28 px-6;
   }
 
   .wedding-container {
-    @apply max-w-5xl mx-auto;
+    @apply max-w-6xl mx-auto;
   }
 
   .section-title {
     font-family: var(--font-display);
-    @apply text-3xl md:text-4xl lg:text-5xl font-medium tracking-wide text-foreground text-center mb-4;
+    @apply text-4xl md:text-5xl lg:text-6xl font-medium tracking-wide text-foreground text-center mb-4;
   }
 
   .section-subtitle {
@@ -98,11 +101,25 @@
   }
 
   .wedding-divider {
-    @apply w-24 h-px bg-accent mx-auto my-8;
+    @apply relative w-28 h-px bg-accent mx-auto my-8;
+  }
+
+  .wedding-divider::before,
+  .wedding-divider::after {
+    content: "";
+    @apply absolute top-1/2 h-px w-10 bg-border;
+  }
+
+  .wedding-divider::before {
+    @apply right-full mr-4;
+  }
+
+  .wedding-divider::after {
+    @apply left-full ml-4;
   }
 
   .card-wedding {
-    @apply bg-card rounded-lg p-8 md:p-10 shadow-sm border border-border;
+    @apply bg-card/90 rounded-lg p-8 md:p-10 shadow-xl shadow-primary/10 border border-white/70 backdrop-blur;
   }
 
   .btn-wedding {
@@ -119,6 +136,33 @@
            border-2 border-primary text-primary rounded-sm
            transition-all duration-300
            hover:bg-primary hover:text-primary-foreground;
+  }
+
+  .section-eyebrow {
+    font-family: var(--font-accent);
+    @apply text-base md:text-lg tracking-[0.28em] uppercase text-primary/65 text-center mb-3;
+  }
+
+  .editorial-panel {
+    @apply relative rounded-lg border border-white/70 bg-background/80 p-7 md:p-10 shadow-2xl shadow-primary/10 backdrop-blur;
+  }
+
+  .editorial-panel::before {
+    content: "";
+    @apply absolute inset-3 rounded-md border border-accent/45 pointer-events-none;
+  }
+
+  .image-frame {
+    @apply relative rounded-lg p-3 bg-white/55 shadow-2xl shadow-primary/15;
+  }
+
+  .image-frame::before {
+    content: "";
+    @apply absolute -inset-3 rounded-lg border border-accent/55;
+  }
+
+  .image-frame img {
+    @apply relative rounded-md w-full object-cover;
   }
 }
 

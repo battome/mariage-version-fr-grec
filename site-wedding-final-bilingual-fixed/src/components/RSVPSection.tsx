@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Heart, Send } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
+import HiddenHeart from "@/components/HiddenHeart";
 
 const encode = (data: Record<string, string>) =>
   Object.keys(data)
@@ -54,23 +55,24 @@ const RSVPSection = () => {
 
   return (
     <section id="rsvp" className="wedding-section bg-background">
-      <div className="wedding-container">
-        <p className="font-accent text-lg tracking-[0.2em] uppercase text-accent-foreground/60 text-center mb-3">
-          {t.rsvp.eyebrow}
-        </p>
+      <div className="absolute left-1/2 top-12 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-gold-light/30 blur-3xl" />
+      <HiddenHeart className="left-[11%] top-32 rotate-12" />
+
+      <div className="wedding-container relative">
+        <p className="section-eyebrow">{t.rsvp.eyebrow}</p>
         <h2 className="section-title">{t.rsvp.title}</h2>
         <div className="wedding-divider" />
 
-        <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">{t.rsvp.intro}</p>
+        <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 md:text-lg">{t.rsvp.intro}</p>
 
         {submitted ? (
-          <div className="max-w-lg mx-auto text-center card-wedding">
+          <div className="max-w-lg mx-auto text-center editorial-panel">
             <Heart className="w-12 h-12 text-terracotta mx-auto mb-4" />
             <h3 className="font-display text-2xl mb-3">{t.rsvp.thankYouTitle}</h3>
             <p className="text-muted-foreground">{t.rsvp.thankYouText}</p>
           </div>
         ) : (
-          <form name="rsvp" method="POST" data-netlify="true" onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-6">
+          <form name="rsvp" method="POST" data-netlify="true" onSubmit={handleSubmit} className="editorial-panel max-w-2xl mx-auto space-y-6">
             <input type="hidden" name="form-name" value="rsvp" />
 
             <div>
@@ -81,7 +83,7 @@ const RSVPSection = () => {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-3 bg-card border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                className="w-full px-4 py-3 bg-white/70 border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
                 placeholder={t.rsvp.namePlaceholder}
               />
             </div>
@@ -94,7 +96,7 @@ const RSVPSection = () => {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-3 bg-card border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                className="w-full px-4 py-3 bg-white/70 border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
                 placeholder="votre@email.com"
               />
             </div>
@@ -105,7 +107,7 @@ const RSVPSection = () => {
                 name="guests"
                 value={formData.guests}
                 onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
-                className="w-full px-4 py-3 bg-card border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                className="w-full px-4 py-3 bg-white/70 border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
               >
                 {[1, 2, 3, 4, 5].map((n) => (
                   <option key={n} value={String(n)}>
@@ -117,14 +119,14 @@ const RSVPSection = () => {
 
             <div>
               <label className="block font-accent text-lg mb-3">{t.rsvp.attending}</label>
-              <div className="flex gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row">
                 {[t.rsvp.yes, t.rsvp.no].map((option) => (
                   <label
                     key={option}
                     className={`flex-1 text-center px-4 py-3 border rounded-sm cursor-pointer transition-all ${
                       formData.attending === option
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-card border-border hover:border-primary/50"
+                        ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
+                        : "bg-white/70 border-border hover:border-primary/50"
                     }`}
                   >
                     <input
@@ -149,7 +151,7 @@ const RSVPSection = () => {
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 rows={3}
-                className="w-full px-4 py-3 bg-card border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-none"
+                className="w-full px-4 py-3 bg-white/70 border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-none"
                 placeholder={t.rsvp.messagePlaceholder}
               />
             </div>
