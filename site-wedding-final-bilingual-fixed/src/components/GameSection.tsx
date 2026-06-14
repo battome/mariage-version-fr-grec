@@ -44,6 +44,8 @@ const labels = {
       "Répondez aux questions, cherchez les indices sur le site et tentez de grimper dans le classement des invités.",
     teamName: "NOM PRÉNOM",
     teamPlaceholder: "Votre nom",
+    email: "ADRESSE MAIL",
+    emailPlaceholder: "votre@email.com",
     submit: "Valider mes réponses",
     replay: "Rejouer",
     score: "Votre score",
@@ -59,6 +61,7 @@ const labels = {
     sending: "Calcul du score...",
     error:
       "Impossible d'enregistrer le score pour le moment. Vérifie la table et les variables Supabase.",
+    duplicateEmail: "Cette adresse mail a déjà été utilisée pour jouer.",
     categories: {
       couple: "Questions sur les mariés",
       observation: "Questions d'observation",
@@ -78,6 +81,8 @@ const labels = {
       "Απαντήστε στις ερωτήσεις, βρείτε στοιχεία στον ιστότοπο και ανεβείτε στην κατάταξη των καλεσμένων.",
     teamName: "ΟΝΟΜΑ ΕΠΩΝΥΜΟ",
     teamPlaceholder: "Το όνομά σας",
+    email: "EMAIL",
+    emailPlaceholder: "to-email-sas@example.com",
     submit: "Υποβολή απαντήσεων",
     replay: "Παίξτε ξανά",
     score: "Η βαθμολογία σας",
@@ -93,6 +98,7 @@ const labels = {
     sending: "Υπολογισμός βαθμολογίας...",
     error:
       "Δεν ήταν δυνατή η αποθήκευση της βαθμολογίας. Ελέγξτε τον πίνακα και τις μεταβλητές Supabase.",
+    duplicateEmail: "Αυτή η διεύθυνση email έχει ήδη χρησιμοποιηθεί για το παιχνίδι.",
     categories: {
       couple: "Ερωτήσεις για το ζευγάρι",
       observation: "Ερωτήσεις παρατήρησης",
@@ -419,6 +425,7 @@ const GameSection = () => {
   const { language } = useLanguage();
   const copy = labels[language];
   const [playerName, setPlayerName] = useState("");
+  const [playerEmail, setPlayerEmail] = useState("");
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [score, setScore] = useState<number | null>(null);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -490,13 +497,20 @@ const GameSection = () => {
       }
 
       const nextScore = calculateScore(answers);
+      const normalizedEmail = playerEmail.trim().toLowerCase();
       const { error: insertError } = await supabase.from("wedding_quiz_results").insert({
         name: playerName.trim(),
+        email: normalizedEmail,
         score: nextScore,
         answers,
       });
 
       if (insertError) {
+        if (insertError.code === "23505") {
+          setError(copy.duplicateEmail);
+          return;
+        }
+
         throw insertError;
       }
 
@@ -522,9 +536,46 @@ const GameSection = () => {
   };
 
   const resetGame = () => {
+    setPlayerName("");
+    setPlayerEmail("");
     setAnswers({});
     setScore(null);
   };
+
+  const leaderboardPanel = (
+    <div className="editorial-panel">
+      <div className="mb-5 flex items-center gap-3">
+        <Trophy className="h-5 w-5 text-primary" />
+        <h3 className="font-display text-2xl">{copy.ranking}</h3>
+      </div>
+
+      {leaderboardLoading ? (
+        <p className="text-muted-foreground">{copy.loadingRanking}</p>
+      ) : leaderboard.length === 0 ? (
+        <p className="text-muted-foreground">{copy.emptyRanking}</p>
+      ) : (
+        <ol className="space-y-3">
+          {leaderboard.map((entry, index) => (
+            <li
+              key={`${entry.name}-${entry.created_at}`}
+              className="flex items-center justify-between gap-4 rounded-sm border border-border/80 bg-white/50 px-3 py-3"
+            >
+              <span className="flex min-w-0 items-center gap-3">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm text-primary-foreground">
+                  {index + 1}
+                </span>
+                <span className="truncate font-accent text-lg">{entry.name}</span>
+              </span>
+              <span className="flex items-center gap-1 font-display text-xl text-primary">
+                {entry.score}
+                {index === 0 && <CheckCircle2 className="h-4 w-4" />}
+              </span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
 
   return (
     <section id="jeu" className="wedding-section bg-secondary/30">
@@ -540,20 +591,24 @@ const GameSection = () => {
           {copy.intro}
         </p>
 
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="editorial-panel group mx-auto block w-full max-w-3xl text-center transition-transform duration-300 hover:-translate-y-1"
-        >
-          <Gift className="mx-auto mb-5 h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-110" />
-          <span className="block font-display text-4xl font-medium text-foreground md:text-6xl">
-            {copy.title}
-          </span>
-          <span className="mt-4 block font-accent text-2xl italic text-primary md:text-3xl">
-            {copy.reward}
-          </span>
-          <span className="btn-wedding mt-8">{copy.open}</span>
-        </button>
+        <div className="mx-auto grid max-w-6xl items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="editorial-panel group block w-full text-center transition-transform duration-300 hover:-translate-y-1"
+          >
+            <Gift className="mx-auto mb-5 h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-110" />
+            <span className="block font-display text-4xl font-medium text-foreground md:text-6xl">
+              {copy.title}
+            </span>
+            <span className="mt-4 block font-accent text-2xl italic text-primary md:text-3xl">
+              {copy.reward}
+            </span>
+            <span className="btn-wedding mt-8">{copy.open}</span>
+          </button>
+
+          {leaderboardPanel}
+        </div>
 
         {open && (
           <div
@@ -584,15 +639,29 @@ const GameSection = () => {
 
               <div className="grid gap-8 p-5 md:p-8 lg:grid-cols-[1fr_0.38fr]">
                 <form onSubmit={handleSubmit} className="editorial-panel space-y-8">
-            <div>
-              <label className="mb-2 block font-accent text-xl">{copy.teamName}</label>
-              <input
-                value={playerName}
-                onChange={(event) => setPlayerName(event.target.value)}
-                className="w-full rounded-sm border border-border bg-white/75 px-4 py-3 font-body transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
-                placeholder={copy.teamPlaceholder}
-                required
-              />
+            <div className="grid gap-5 md:grid-cols-2">
+              <div>
+                <label className="mb-2 block font-accent text-xl">{copy.teamName}</label>
+                <input
+                  value={playerName}
+                  onChange={(event) => setPlayerName(event.target.value)}
+                  className="w-full rounded-sm border border-border bg-white/75 px-4 py-3 font-body transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  placeholder={copy.teamPlaceholder}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block font-accent text-xl">{copy.email}</label>
+                <input
+                  type="email"
+                  value={playerEmail}
+                  onChange={(event) => setPlayerEmail(event.target.value)}
+                  className="w-full rounded-sm border border-border bg-white/75 px-4 py-3 font-body transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  placeholder={copy.emailPlaceholder}
+                  required
+                />
+              </div>
             </div>
 
             {questionsByCategory.map((category) => (
@@ -777,38 +846,7 @@ const GameSection = () => {
               </p>
             </div>
 
-            <div className="editorial-panel">
-              <div className="mb-5 flex items-center gap-3">
-                <Trophy className="h-5 w-5 text-primary" />
-                <h3 className="font-display text-2xl">{copy.ranking}</h3>
-              </div>
-
-              {leaderboardLoading ? (
-                <p className="text-muted-foreground">{copy.loadingRanking}</p>
-              ) : leaderboard.length === 0 ? (
-                <p className="text-muted-foreground">{copy.emptyRanking}</p>
-              ) : (
-                <ol className="space-y-3">
-                  {leaderboard.map((entry, index) => (
-                    <li
-                      key={`${entry.name}-${entry.created_at}`}
-                      className="flex items-center justify-between gap-4 rounded-sm border border-border/80 bg-white/50 px-3 py-3"
-                    >
-                      <span className="flex min-w-0 items-center gap-3">
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm text-primary-foreground">
-                          {index + 1}
-                        </span>
-                        <span className="truncate font-accent text-lg">{entry.name}</span>
-                      </span>
-                      <span className="flex items-center gap-1 font-display text-xl text-primary">
-                        {entry.score}
-                        {index === 0 && <CheckCircle2 className="h-4 w-4" />}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-              )}
-            </div>
+            {leaderboardPanel}
                 </aside>
               </div>
             </div>
