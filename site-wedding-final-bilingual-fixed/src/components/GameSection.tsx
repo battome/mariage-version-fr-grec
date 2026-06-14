@@ -413,7 +413,7 @@ const GameSection = () => {
         }
       } catch {
         if (active) {
-          setError(copy.error);
+          setLeaderboard([]);
         }
       } finally {
         if (active) {
