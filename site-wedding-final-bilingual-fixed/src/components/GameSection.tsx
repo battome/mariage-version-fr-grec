@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Gift, RotateCcw, Send, Sparkles, Trophy, X } from "lucide-react";
 import { Language, useLanguage } from "@/lib/i18n";
+import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import HiddenHeart from "@/components/HiddenHeart";
 
 type CategoryId = "couple" | "observation" | "fun";
@@ -30,10 +31,8 @@ type BonusQuestion = {
 type LeaderboardEntry = {
   name: string;
   score: number;
-  date: string;
+  created_at: string;
 };
-
-const gameScoreEndpoint = "/.netlify/functions/game-score";
 
 const labels = {
   fr: {
@@ -59,7 +58,7 @@ const labels = {
     saved: "Score enregistré",
     sending: "Calcul du score...",
     error:
-      "Impossible d'enregistrer le score pour le moment. Le classement en ligne fonctionne une fois le site déployé sur Netlify.",
+      "Impossible d'enregistrer le score pour le moment. Vérifie la table et les variables Supabase.",
     categories: {
       couple: "Questions sur les mariés",
       observation: "Questions d'observation",
@@ -93,7 +92,7 @@ const labels = {
     saved: "Η βαθμολογία αποθηκεύτηκε",
     sending: "Υπολογισμός βαθμολογίας...",
     error:
-      "Δεν ήταν δυνατή η αποθήκευση της βαθμολογίας. Η διαδικτυακή κατάταξη λειτουργεί όταν ο ιστότοπος είναι στο Netlify.",
+      "Δεν ήταν δυνατή η αποθήκευση της βαθμολογίας. Ελέγξτε τον πίνακα και τις μεταβλητές Supabase.",
     categories: {
       couple: "Ερωτήσεις για το ζευγάρι",
       observation: "Ερωτήσεις παρατήρησης",
@@ -119,6 +118,45 @@ const getDaysUntilWedding = () => {
 };
 
 const daysUntilWedding = getDaysUntilWedding();
+
+const correctAnswers: Record<string, string> = {
+  "first-island": "agistri",
+  "alexia-birth-city": "athens",
+  "alexandre-birth-city": "paris",
+  "meeting-month": "june",
+  "favorite-series": "game-of-thrones",
+  "mamma-mia-ranking": "lay-all-your-love-on-me|super-trouper|dancing-queen|our-last-summer",
+  "alexandre-greek-song": "athina-mou",
+  "rsvp-deadline": "2027-01-30",
+  "ceremony-time": "17h00",
+  "days-left": String(daysUntilWedding),
+  "hidden-hearts": "8",
+  "groom-nipples": "4",
+  "bride-height": "1.58",
+  "donkey-impulse": "alexandre",
+  "weird-greek-purchase": "bull-testicle-nerve",
+  "alexia-greek-dish": "papoutsakia",
+};
+
+const calculateScore = (answers: Record<string, string>) => {
+  const scoreByCategory = categories.reduce(
+    (total, category) => {
+      const categoryQuestions = questions.filter((question) => question.category === category.id);
+      const correctCount = categoryQuestions.filter(
+        (question) => answers[question.id] === correctAnswers[question.id],
+      ).length;
+
+      if (categoryQuestions.length === 0) {
+        return total;
+      }
+
+      return total + (correctCount / categoryQuestions.length) * category.weight;
+    },
+    0,
+  );
+
+  return Math.round(scoreByCategory);
+};
 
 const bonusQuestion: BonusQuestion = {
   id: "winner-prediction",
@@ -402,14 +440,26 @@ const GameSection = () => {
     let active = true;
 
     const loadLeaderboard = async () => {
+      if (!supabase) {
+        setLeaderboard([]);
+        setLeaderboardLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch(gameScoreEndpoint);
-        if (!response.ok) {
-          throw new Error("Unable to load leaderboard");
+        const { data, error } = await supabase
+          .from("wedding_quiz_results")
+          .select("name, score, created_at")
+          .order("score", { ascending: false })
+          .order("created_at", { ascending: true })
+          .limit(10);
+
+        if (error) {
+          throw error;
         }
-        const data = await response.json();
-        if (active && Array.isArray(data.leaderboard)) {
-          setLeaderboard(data.leaderboard.slice(0, 10));
+
+        if (active && Array.isArray(data)) {
+          setLeaderboard(data);
         }
       } catch {
         if (active) {
@@ -427,7 +477,7 @@ const GameSection = () => {
     return () => {
       active = false;
     };
-  }, [copy.error]);
+  }, []);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -435,24 +485,35 @@ const GameSection = () => {
     setError("");
 
     try {
-      const response = await fetch(gameScoreEndpoint, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          name: playerName.trim(),
-          answers,
-        }),
+      if (!isSupabaseConfigured || !supabase) {
+        throw new Error("Supabase is not configured");
+      }
+
+      const nextScore = calculateScore(answers);
+      const { error: insertError } = await supabase.from("wedding_quiz_results").insert({
+        name: playerName.trim(),
+        score: nextScore,
+        answers,
       });
 
-      if (!response.ok) {
-        throw new Error("Unable to submit score");
+      if (insertError) {
+        throw insertError;
       }
 
-      const data = await response.json();
-      setScore(data.score);
-      if (Array.isArray(data.leaderboard)) {
-        setLeaderboard(data.leaderboard);
+      setScore(nextScore);
+
+      const { data: leaderboardData, error: leaderboardError } = await supabase
+        .from("wedding_quiz_results")
+        .select("name, score, created_at")
+        .order("score", { ascending: false })
+        .order("created_at", { ascending: true })
+        .limit(10);
+
+      if (leaderboardError) {
+        throw leaderboardError;
       }
+
+      setLeaderboard(leaderboardData || []);
     } catch {
       setError(copy.error);
     } finally {
@@ -730,7 +791,7 @@ const GameSection = () => {
                 <ol className="space-y-3">
                   {leaderboard.map((entry, index) => (
                     <li
-                      key={`${entry.name}-${entry.date}`}
+                      key={`${entry.name}-${entry.created_at}`}
                       className="flex items-center justify-between gap-4 rounded-sm border border-border/80 bg-white/50 px-3 py-3"
                     >
                       <span className="flex min-w-0 items-center gap-3">
