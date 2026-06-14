@@ -1,4 +1,4 @@
 [build]
-  command = "cd site-wedding-final-bilingual-fixed && npm ci && npm run build"
+  command = "npm ci && npm ci --prefix site-wedding-final-bilingual-fixed && npm run build --prefix site-wedding-final-bilingual-fixed"
   publish = "site-wedding-final-bilingual-fixed/dist"
-  functions = "site-wedding-final-bilingual-fixed/netlify/functions"
+  functions = "netlify/functions"
