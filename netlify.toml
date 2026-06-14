@@ -1,5 +1,4 @@
 [build]
-  base = "site-wedding-final-bilingual-fixed"
-  command = "npm run build"
-  publish = "dist"
-  functions = "netlify/functions"
+  command = "cd site-wedding-final-bilingual-fixed && npm ci && npm run build"
+  publish = "site-wedding-final-bilingual-fixed/dist"
+  functions = "site-wedding-final-bilingual-fixed/netlify/functions"
