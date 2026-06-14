@@ -1,4 +1,4 @@
-const { getStore } = require("@netlify/blobs");
+import { getStore } from "@netlify/blobs";
 
 const leaderboardKey = "leaderboard";
 
@@ -98,7 +98,7 @@ const calculateScore = (answers) => {
   }, 0);
 };
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   try {
     if (event.httpMethod === "GET") {
       const leaderboard = await getLeaderboard();
@@ -151,7 +151,7 @@ exports.handler = async (event) => {
         leaderboard: nextLeaderboard.slice(0, 10).map(toPublicEntry),
       }),
     };
-  } catch (error) {
+  } catch {
     return {
       statusCode: 500,
       headers,
