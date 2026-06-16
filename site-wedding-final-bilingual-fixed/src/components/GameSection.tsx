@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Gift, RotateCcw, Send, Sparkles, Trophy, X } from "lucide-react";
+import { BarChart3, Gift, RotateCcw, Send, Sparkles, X } from "lucide-react";
 import { Language, useLanguage } from "@/lib/i18n";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import HiddenHeart from "@/components/HiddenHeart";
@@ -28,10 +28,8 @@ type BonusQuestion = {
   options: Option[];
 };
 
-type LeaderboardEntry = {
-  name: string;
+type ScoreEntry = {
   score: number;
-  created_at: string;
 };
 
 const labels = {
@@ -49,9 +47,12 @@ const labels = {
     submit: "Valider mes réponses",
     replay: "Rejouer",
     score: "Votre score",
-    ranking: "Classement",
-    emptyRanking: "Aucun score pour le moment.",
-    loadingRanking: "Chargement du classement...",
+    stats: "Scores des invités",
+    maxScore: "Score max",
+    minScore: "Score min",
+    averageScore: "Moyenne",
+    emptyStats: "Aucun score pour le moment.",
+    loadingStats: "Chargement des scores...",
     answerPlaceholder: "Votre réponse",
     choose: "Choisir",
     rankPlaceholder: "Choisir une chanson",
@@ -86,9 +87,12 @@ const labels = {
     submit: "Υποβολή απαντήσεων",
     replay: "Παίξτε ξανά",
     score: "Η βαθμολογία σας",
-    ranking: "Κατάταξη",
-    emptyRanking: "Δεν υπάρχει ακόμα βαθμολογία.",
-    loadingRanking: "Φόρτωση κατάταξης...",
+    stats: "Βαθμολογίες καλεσμένων",
+    maxScore: "Μέγιστη βαθμολογία",
+    minScore: "Ελάχιστη βαθμολογία",
+    averageScore: "Μέσος όρος",
+    emptyStats: "Δεν υπάρχει ακόμα βαθμολογία.",
+    loadingStats: "Φόρτωση βαθμολογιών...",
     answerPlaceholder: "Η απάντησή σας",
     choose: "Επιλογή",
     rankPlaceholder: "Επιλέξτε τραγούδι",
@@ -428,8 +432,8 @@ const GameSection = () => {
   const [playerEmail, setPlayerEmail] = useState("");
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [score, setScore] = useState<number | null>(null);
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [leaderboardLoading, setLeaderboardLoading] = useState(true);
+  const [scoreEntries, setScoreEntries] = useState<ScoreEntry[]>([]);
+  const [scoresLoading, setScoresLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
@@ -443,43 +447,55 @@ const GameSection = () => {
     [],
   );
 
+  const scoreStats = useMemo(() => {
+    if (scoreEntries.length === 0) {
+      return null;
+    }
+
+    const scores = scoreEntries.map((entry) => entry.score);
+    const total = scores.reduce((sum, value) => sum + value, 0);
+
+    return {
+      max: Math.max(...scores),
+      min: Math.min(...scores),
+      average: total / scores.length,
+    };
+  }, [scoreEntries]);
+
   useEffect(() => {
     let active = true;
 
-    const loadLeaderboard = async () => {
+    const loadScores = async () => {
       if (!supabase) {
-        setLeaderboard([]);
-        setLeaderboardLoading(false);
+        setScoreEntries([]);
+        setScoresLoading(false);
         return;
       }
 
       try {
         const { data, error } = await supabase
           .from("wedding_quiz_results")
-          .select("name, score, created_at")
-          .order("score", { ascending: false })
-          .order("created_at", { ascending: true })
-          .limit(10);
+          .select("score");
 
         if (error) {
           throw error;
         }
 
         if (active && Array.isArray(data)) {
-          setLeaderboard(data);
+          setScoreEntries(data);
         }
       } catch {
         if (active) {
-          setLeaderboard([]);
+          setScoreEntries([]);
         }
       } finally {
         if (active) {
-          setLeaderboardLoading(false);
+          setScoresLoading(false);
         }
       }
     };
 
-    loadLeaderboard();
+    loadScores();
 
     return () => {
       active = false;
@@ -516,18 +532,15 @@ const GameSection = () => {
 
       setScore(nextScore);
 
-      const { data: leaderboardData, error: leaderboardError } = await supabase
+      const { data: scoreData, error: scoreError } = await supabase
         .from("wedding_quiz_results")
-        .select("name, score, created_at")
-        .order("score", { ascending: false })
-        .order("created_at", { ascending: true })
-        .limit(10);
+        .select("score");
 
-      if (leaderboardError) {
-        throw leaderboardError;
+      if (scoreError) {
+        throw scoreError;
       }
 
-      setLeaderboard(leaderboardData || []);
+      setScoreEntries(scoreData || []);
     } catch {
       setError(copy.error);
     } finally {
@@ -542,37 +555,33 @@ const GameSection = () => {
     setScore(null);
   };
 
-  const leaderboardPanel = (
+  const scoreStatsPanel = (
     <div className="editorial-panel">
       <div className="mb-5 flex items-center gap-3">
-        <Trophy className="h-5 w-5 text-primary" />
-        <h3 className="font-display text-2xl">{copy.ranking}</h3>
+        <BarChart3 className="h-5 w-5 text-primary" />
+        <h3 className="font-display text-2xl">{copy.stats}</h3>
       </div>
 
-      {leaderboardLoading ? (
-        <p className="text-muted-foreground">{copy.loadingRanking}</p>
-      ) : leaderboard.length === 0 ? (
-        <p className="text-muted-foreground">{copy.emptyRanking}</p>
+      {scoresLoading ? (
+        <p className="text-muted-foreground">{copy.loadingStats}</p>
+      ) : !scoreStats ? (
+        <p className="text-muted-foreground">{copy.emptyStats}</p>
       ) : (
-        <ol className="space-y-3">
-          {leaderboard.map((entry, index) => (
-            <li
-              key={`${entry.name}-${entry.created_at}`}
+        <div className="grid gap-3">
+          {[
+            { label: copy.maxScore, value: scoreStats.max },
+            { label: copy.minScore, value: scoreStats.min },
+            { label: copy.averageScore, value: scoreStats.average.toFixed(1) },
+          ].map((stat) => (
+            <div
+              key={stat.label}
               className="flex items-center justify-between gap-4 rounded-sm border border-border/80 bg-white/50 px-3 py-3"
             >
-              <span className="flex min-w-0 items-center gap-3">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm text-primary-foreground">
-                  {index + 1}
-                </span>
-                <span className="truncate font-accent text-lg">{entry.name}</span>
-              </span>
-              <span className="flex items-center gap-1 font-display text-xl text-primary">
-                {entry.score}
-                {index === 0 && <CheckCircle2 className="h-4 w-4" />}
-              </span>
-            </li>
+              <span className="font-accent text-lg text-muted-foreground">{stat.label}</span>
+              <span className="font-display text-2xl text-primary">{stat.value}</span>
+            </div>
           ))}
-        </ol>
+        </div>
       )}
     </div>
   );
@@ -607,7 +616,7 @@ const GameSection = () => {
             <span className="btn-wedding mt-8">{copy.open}</span>
           </button>
 
-          {leaderboardPanel}
+          {scoreStatsPanel}
         </div>
 
         {open && (
@@ -846,7 +855,7 @@ const GameSection = () => {
               </p>
             </div>
 
-            {leaderboardPanel}
+            {scoreStatsPanel}
                 </aside>
               </div>
             </div>
