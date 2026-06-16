@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { BarChart3, Gift, RotateCcw, Send, Sparkles, X } from "lucide-react";
+import { BarChart3, Gift, Send, Sparkles, X } from "lucide-react";
 import { Language, useLanguage } from "@/lib/i18n";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import HiddenHeart from "@/components/HiddenHeart";
@@ -30,6 +30,7 @@ type BonusQuestion = {
 
 type ScoreEntry = {
   score: number;
+  answers?: Record<string, string> | null;
 };
 
 const labels = {
@@ -47,10 +48,13 @@ const labels = {
     submit: "Valider mes réponses",
     replay: "Rejouer",
     score: "Votre score",
+    participationTitle: "Bravo pour ta participation",
+    participationOk: "Merci !",
     stats: "Scores des invités",
     maxScore: "Score max",
     minScore: "Score min",
     averageScore: "Moyenne",
+    winnerPrediction: "Qui va gagner ?",
     emptyStats: "Aucun score pour le moment.",
     loadingStats: "Chargement des scores...",
     answerPlaceholder: "Votre réponse",
@@ -87,10 +91,13 @@ const labels = {
     submit: "Υποβολή απαντήσεων",
     replay: "Παίξτε ξανά",
     score: "Η βαθμολογία σας",
+    participationTitle: "Μπράβο για τη συμμετοχή σου",
+    participationOk: "Ευχαριστώ!",
     stats: "Βαθμολογίες καλεσμένων",
     maxScore: "Μέγιστη βαθμολογία",
     minScore: "Ελάχιστη βαθμολογία",
     averageScore: "Μέσος όρος",
+    winnerPrediction: "Ποιος θα κερδίσει;",
     emptyStats: "Δεν υπάρχει ακόμα βαθμολογία.",
     loadingStats: "Φόρτωση βαθμολογιών...",
     answerPlaceholder: "Η απάντησή σας",
@@ -181,6 +188,8 @@ const bonusQuestion: BonusQuestion = {
     { value: "groom-family", label: { fr: "Famille du marié", el: "Οικογένεια του γαμπρού" } },
   ],
 };
+
+const winnerChartColors = ["#a16b45", "#d4a373", "#5c8790", "#9aa66a"];
 
 const questions: Question[] = [
   {
@@ -437,6 +446,7 @@ const GameSection = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
+  const [participationOpen, setParticipationOpen] = useState(false);
 
   const questionsByCategory = useMemo(
     () =>
@@ -462,6 +472,24 @@ const GameSection = () => {
     };
   }, [scoreEntries]);
 
+  const winnerStats = useMemo(() => {
+    const counts = bonusQuestion.options.map((option) => ({
+      ...option,
+      count: scoreEntries.filter((entry) => entry.answers?.[bonusQuestion.id] === option.value)
+        .length,
+    }));
+    const total = counts.reduce((sum, item) => sum + item.count, 0);
+
+    if (total === 0) {
+      return [];
+    }
+
+    return counts.map((item) => ({
+      ...item,
+      percentage: Math.round((item.count / total) * 100),
+    }));
+  }, [scoreEntries]);
+
   useEffect(() => {
     let active = true;
 
@@ -475,7 +503,7 @@ const GameSection = () => {
       try {
         const { data, error } = await supabase
           .from("wedding_quiz_results")
-          .select("score");
+          .select("score, answers");
 
         if (error) {
           throw error;
@@ -531,10 +559,11 @@ const GameSection = () => {
       }
 
       setScore(nextScore);
+      setParticipationOpen(true);
 
       const { data: scoreData, error: scoreError } = await supabase
         .from("wedding_quiz_results")
-        .select("score");
+        .select("score, answers");
 
       if (scoreError) {
         throw scoreError;
@@ -546,13 +575,6 @@ const GameSection = () => {
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const resetGame = () => {
-    setPlayerName("");
-    setPlayerEmail("");
-    setAnswers({});
-    setScore(null);
   };
 
   const scoreStatsPanel = (
@@ -581,6 +603,57 @@ const GameSection = () => {
               <span className="font-display text-2xl text-primary">{stat.value}</span>
             </div>
           ))}
+
+          {winnerStats.length > 0 && (
+            <div className="rounded-sm border border-border/80 bg-white/50 px-3 py-4">
+              <p className="mb-4 font-accent text-lg text-muted-foreground">
+                {copy.winnerPrediction}
+              </p>
+              <div className="grid gap-4 sm:grid-cols-[7rem_1fr] sm:items-center lg:grid-cols-1">
+                <div
+                  className="mx-auto h-28 w-28 rounded-full border border-border shadow-inner"
+                  style={{
+                    background: `conic-gradient(${winnerStats
+                      .reduce(
+                        (segments, stat, index) => {
+                          const start = segments.total;
+                          const end = start + stat.percentage;
+                          return {
+                            total: end,
+                            values: [
+                              ...segments.values,
+                              `${winnerChartColors[index]} ${start}% ${end}%`,
+                            ],
+                          };
+                        },
+                        { total: 0, values: [] as string[] },
+                      )
+                      .values.join(", ")})`,
+                  }}
+                  aria-hidden="true"
+                />
+
+                <div className="grid gap-2">
+                  {winnerStats.map((stat, index) => (
+                    <div key={stat.value} className="flex items-center justify-between gap-3">
+                      <span className="flex min-w-0 items-center gap-2">
+                        <span
+                          className="h-3 w-3 shrink-0 rounded-full"
+                          style={{ backgroundColor: winnerChartColors[index] }}
+                        />
+                        <span className="truncate text-sm text-muted-foreground">
+                          {stat.label[language]}
+                        </span>
+                      </span>
+                      <span className="font-display text-xl text-primary">
+                        {stat.percentage}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -828,12 +901,6 @@ const GameSection = () => {
                 <Send className="h-4 w-4" />
                 {submitting ? copy.sending : copy.submit}
               </button>
-              {score !== null && (
-                <button type="button" onClick={resetGame} className="btn-wedding-outline gap-2">
-                  <RotateCcw className="h-4 w-4" />
-                  {copy.replay}
-                </button>
-              )}
             </div>
 
             {error && (
@@ -859,6 +926,30 @@ const GameSection = () => {
                 </aside>
               </div>
             </div>
+
+            {participationOpen && (
+              <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/50 px-4 backdrop-blur-sm">
+                <div
+                  className="w-full max-w-sm rounded-lg border border-border bg-background px-6 py-7 text-center shadow-2xl shadow-foreground/25"
+                  role="alertdialog"
+                  aria-modal="true"
+                >
+                  <div className="mb-4 text-6xl" aria-hidden="true">
+                    🎆
+                  </div>
+                  <p className="font-display text-3xl text-foreground">
+                    {copy.participationTitle}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setParticipationOpen(false)}
+                    className="btn-wedding mt-6"
+                  >
+                    {copy.participationOk}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
