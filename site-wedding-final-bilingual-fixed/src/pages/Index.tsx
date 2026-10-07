@@ -8,13 +8,16 @@ import GameSection from "@/components/GameSection";
 import RSVPSection from "@/components/RSVPSection";
 import ContactSection from "@/components/ContactSection";
 import { LanguageProvider } from "@/lib/i18n";
+import ScrollScenery from "@/components/ScrollScenery/ScrollScenery";
 
 const Index = () => {
   return (
     <LanguageProvider>
-      <div className="min-h-screen">
+      <div className="min-h-screen scenery-active">
+        <ScrollScenery />
+        <div className="scenery-content">
         <WeddingNav />
-        <HeroSection />
+        <HeroSection transparentBackground />
         <GameSection />
         <StorySection />
         <VenueSection />
@@ -22,6 +25,7 @@ const Index = () => {
         <TransportSection />
         <RSVPSection />
         <ContactSection />
+        </div>
       </div>
     </LanguageProvider>
   );

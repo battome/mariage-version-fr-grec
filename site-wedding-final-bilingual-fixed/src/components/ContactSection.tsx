@@ -30,6 +30,7 @@ const ContactSection = () => {
         <p className="text-sm text-muted-foreground/60 flex items-center justify-center gap-1">
           {t.contact.footer} <Heart className="w-3 h-3 text-terracotta" /> {t.contact.footerEnd}
         </p>
+        <p className="text-[11px] leading-relaxed text-muted-foreground/50 max-w-2xl mx-auto mt-6">{t.contact.credits}</p>
       </div>
     </section>
   );

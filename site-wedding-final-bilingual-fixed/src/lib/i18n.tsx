@@ -124,6 +124,8 @@ const translations = {
       date: "17 Juillet 2027",
       footer: "Fait avec",
       footerEnd: "pour notre plus beau jour",
+      credits:
+        "Décor photo : façade de la cathédrale Saint-Denis par A. Savin et Acropole depuis la Pnyx par George E. Koronaios (Wikimedia Commons, CC BY-SA), ruelle de Plaka par Henry Ren (Unsplash).",
     },
   },
   el: {
@@ -247,6 +249,8 @@ const translations = {
       date: "17 Ιουλίου 2027",
       footer: "Φτιαγμένο με",
       footerEnd: "για την πιο όμορφη ημέρα μας",
+      credits:
+        "Φωτογραφίες σκηνικού: πρόσοψη του καθεδρικού Αγίου Διονυσίου από A. Savin και Ακρόπολη από την Πνύκα από George E. Koronaios (Wikimedia Commons, CC BY-SA), σοκάκι της Πλάκας από Henry Ren (Unsplash).",
     },
   },
 } as const;

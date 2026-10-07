@@ -48,14 +48,14 @@ const Countdown = () => {
   );
 };
 
-const HeroSection = () => {
+const HeroSection = ({ transparentBackground = false }: { transparentBackground?: boolean }) => {
   const { t } = useLanguage();
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0">
-        <img src={heroImage} alt={t.hero.alt} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-foreground/40" />
+        {!transparentBackground && <img src={heroImage} alt={t.hero.alt} className="w-full h-full object-cover" />}
+        <div className={transparentBackground ? "absolute inset-0 bg-gradient-to-b from-foreground/10 via-transparent to-foreground/30" : "absolute inset-0 bg-foreground/40"} />
       </div>
 
       <div className="relative z-10 text-center px-6 animate-fade-in">
