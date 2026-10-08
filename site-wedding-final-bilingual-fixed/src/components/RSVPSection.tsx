@@ -54,8 +54,7 @@ const RSVPSection = () => {
   };
 
   return (
-    <section id="rsvp" className="wedding-section bg-background">
-      <div className="absolute left-1/2 top-12 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-gold-light/30 blur-3xl" />
+    <section id="rsvp" className="wedding-section">
       <HiddenHeart className="left-[11%] top-32 rotate-12" />
 
       <div className="wedding-container relative">
@@ -63,13 +62,13 @@ const RSVPSection = () => {
         <h2 className="section-title">{t.rsvp.title}</h2>
         <div className="wedding-divider" />
 
-        <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 md:text-lg">{t.rsvp.intro}</p>
+        <p className="section-intro">{t.rsvp.intro}</p>
 
         {submitted ? (
           <div className="max-w-lg mx-auto text-center editorial-panel">
             <Heart className="w-12 h-12 text-terracotta mx-auto mb-4" />
             <h3 className="font-display text-2xl mb-3">{t.rsvp.thankYouTitle}</h3>
-            <p className="text-muted-foreground">{t.rsvp.thankYouText}</p>
+            <p className="text-cream/80">{t.rsvp.thankYouText}</p>
           </div>
         ) : (
           <form name="rsvp" method="POST" data-netlify="true" onSubmit={handleSubmit} className="editorial-panel max-w-2xl mx-auto space-y-6">
@@ -83,7 +82,7 @@ const RSVPSection = () => {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-3 bg-white/70 border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                className="glass-input"
                 placeholder={t.rsvp.namePlaceholder}
               />
             </div>
@@ -96,7 +95,7 @@ const RSVPSection = () => {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-3 bg-white/70 border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                className="glass-input"
                 placeholder="votre@email.com"
               />
             </div>
@@ -107,7 +106,7 @@ const RSVPSection = () => {
                 name="guests"
                 value={formData.guests}
                 onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
-                className="w-full px-4 py-3 bg-white/70 border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                className="glass-input"
               >
                 {[1, 2, 3, 4, 5].map((n) => (
                   <option key={n} value={String(n)}>
@@ -123,10 +122,8 @@ const RSVPSection = () => {
                 {[t.rsvp.yes, t.rsvp.no].map((option) => (
                   <label
                     key={option}
-                    className={`flex-1 text-center px-4 py-3 border rounded-sm cursor-pointer transition-all ${
-                      formData.attending === option
-                        ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
-                        : "bg-white/70 border-border hover:border-primary/50"
+                    className={`glass-choice flex-1 text-center ${
+                      formData.attending === option ? "glass-choice-active" : ""
                     }`}
                   >
                     <input
@@ -151,7 +148,7 @@ const RSVPSection = () => {
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 rows={3}
-                className="w-full px-4 py-3 bg-white/70 border border-border rounded-sm font-body focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-none"
+                className="glass-input resize-none"
                 placeholder={t.rsvp.messagePlaceholder}
               />
             </div>

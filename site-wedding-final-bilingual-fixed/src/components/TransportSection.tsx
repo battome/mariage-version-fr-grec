@@ -7,9 +7,7 @@ const TransportSection = () => {
   const { t } = useLanguage();
 
   return (
-    <section id="transport" className="wedding-section bg-card">
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-accent/70 to-transparent" />
-      <div className="absolute right-10 top-20 h-96 w-96 rounded-full bg-sea-light/35 blur-3xl" />
+    <section id="transport" className="wedding-section">
       <HiddenHeart className="right-[22%] top-40 -rotate-6" />
 
       <div className="wedding-container relative">
@@ -20,11 +18,11 @@ const TransportSection = () => {
         <div className="grid gap-10 lg:grid-cols-[0.96fr_1.04fr] items-center mt-16">
           <div className="editorial-panel order-2 lg:order-1">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary/20">
-                <CarTaxiFront className="w-5 h-5 text-primary-foreground" />
+              <div className="icon-disc w-12 h-12">
+                <CarTaxiFront className="w-5 h-5" />
               </div>
 
-              <div className="text-muted-foreground leading-relaxed space-y-4 md:text-lg">
+              <div className="text-cream/85 leading-relaxed space-y-4 md:text-lg">
                 <p>
                   <strong>{t.transport.taxiTitle}</strong>
                   <br />
@@ -43,13 +41,13 @@ const TransportSection = () => {
                 <p>{t.transport.help}</p>
 
                 <p className="space-y-1">
-                  <a href="https://www.europcar.fr/" target="_blank" rel="noopener noreferrer" className="block text-primary underline decoration-accent underline-offset-4">
+                  <a href="https://www.europcar.fr/" target="_blank" rel="noopener noreferrer" className="glass-link block">
                     Europcar
                   </a>
-                  <a href="https://www.sixt.fr/" target="_blank" rel="noopener noreferrer" className="block text-primary underline decoration-accent underline-offset-4">
+                  <a href="https://www.sixt.fr/" target="_blank" rel="noopener noreferrer" className="glass-link block">
                     Sixt
                   </a>
-                  <a href="https://www.hertz.fr/" target="_blank" rel="noopener noreferrer" className="block text-primary underline decoration-accent underline-offset-4">
+                  <a href="https://www.hertz.fr/" target="_blank" rel="noopener noreferrer" className="glass-link block">
                     Hertz
                   </a>
                 </p>

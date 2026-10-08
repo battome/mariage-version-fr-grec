@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import heroImage from "@/assets/hero-mediterranean.jpg";
 import oliveWreath from "@/assets/olive-wreath.png";
 import { useLanguage } from "@/lib/i18n";
 
@@ -36,10 +35,10 @@ const Countdown = () => {
     <div className="flex gap-6 md:gap-10 justify-center">
       {units.map((unit) => (
         <div key={unit.label} className="text-center">
-          <div className="text-3xl md:text-5xl font-display font-light text-primary-foreground">
+          <div className="text-3xl md:text-5xl font-display font-light text-cream">
             {String(unit.value).padStart(2, "0")}
           </div>
-          <div className="text-xs md:text-sm font-accent tracking-[0.2em] uppercase text-primary-foreground/80 mt-1">
+          <div className="text-xs md:text-sm font-accent tracking-[0.2em] uppercase text-cream/80 mt-1">
             {unit.label}
           </div>
         </div>
@@ -48,37 +47,34 @@ const Countdown = () => {
   );
 };
 
-const HeroSection = ({ transparentBackground = false }: { transparentBackground?: boolean }) => {
+const HeroSection = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0">
-        {!transparentBackground && <img src={heroImage} alt={t.hero.alt} className="w-full h-full object-cover" />}
-        <div className={transparentBackground ? "absolute inset-0 bg-gradient-to-b from-foreground/10 via-transparent to-foreground/30" : "absolute inset-0 bg-foreground/40"} />
-      </div>
+    <section className="hero-section relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/35" />
 
-      <div className="relative z-10 text-center px-6 animate-fade-in">
+      <div className="relative z-10 text-center px-6 animate-fade-in [text-shadow:var(--halo-soft)]">
         <img src={oliveWreath} alt="" className="w-32 md:w-44 mx-auto mb-6 opacity-90" />
-        <p className="font-accent text-lg md:text-xl tracking-[0.3em] uppercase text-primary-foreground/80 mb-4">
+        <p className="font-accent text-lg md:text-xl tracking-[0.3em] uppercase text-cream/80 mb-4">
           {t.hero.marrying}
         </p>
-        <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-medium text-primary-foreground mb-2 tracking-wide">
+        <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-medium text-cream mb-2 tracking-wide [text-shadow:var(--halo)]">
           Alexia
         </h1>
         <p className="font-accent text-2xl md:text-3xl text-accent italic mb-2">&</p>
-        <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-medium text-primary-foreground mb-8 tracking-wide">
+        <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-medium text-cream mb-8 tracking-wide [text-shadow:var(--halo)]">
           Alexandre
         </h1>
         <div className="wedding-divider !bg-accent !my-6" />
-        <p className="font-accent text-xl md:text-2xl tracking-[0.2em] text-primary-foreground/90 mb-12">
+        <p className="font-accent text-xl md:text-2xl tracking-[0.2em] text-cream/90 mb-12">
           {t.hero.dateLocation}
         </p>
         <Countdown />
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-px h-12 bg-primary-foreground/40" />
+        <div className="w-px h-12 bg-cream/40" />
       </div>
     </section>
   );

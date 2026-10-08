@@ -13,18 +13,18 @@ import ScrollScenery from "@/components/ScrollScenery/ScrollScenery";
 const Index = () => {
   return (
     <LanguageProvider>
-      <div className="min-h-screen scenery-active">
+      <div className="min-h-screen">
         <ScrollScenery />
         <div className="scenery-content">
-        <WeddingNav />
-        <HeroSection transparentBackground />
-        <GameSection />
-        <StorySection />
-        <VenueSection />
-        <AccommodationSection />
-        <TransportSection />
-        <RSVPSection />
-        <ContactSection />
+          <WeddingNav />
+          <HeroSection />
+          <GameSection />
+          <StorySection />
+          <VenueSection />
+          <AccommodationSection />
+          <TransportSection />
+          <RSVPSection />
+          <ContactSection />
         </div>
       </div>
     </LanguageProvider>

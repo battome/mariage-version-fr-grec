@@ -580,14 +580,14 @@ const GameSection = () => {
   const scoreStatsPanel = (
     <div className="editorial-panel">
       <div className="mb-5 flex items-center gap-3">
-        <BarChart3 className="h-5 w-5 text-primary" />
+        <BarChart3 className="h-5 w-5 text-accent" />
         <h3 className="font-display text-2xl">{copy.stats}</h3>
       </div>
 
       {scoresLoading ? (
-        <p className="text-muted-foreground">{copy.loadingStats}</p>
+        <p className="text-cream/75">{copy.loadingStats}</p>
       ) : !scoreStats ? (
-        <p className="text-muted-foreground">{copy.emptyStats}</p>
+        <p className="text-cream/75">{copy.emptyStats}</p>
       ) : (
         <div className="grid gap-3">
           {[
@@ -597,21 +597,21 @@ const GameSection = () => {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="flex items-center justify-between gap-4 rounded-sm border border-border/80 bg-white/50 px-3 py-3"
+              className="glass-inset flex items-center justify-between gap-4 px-3 py-3"
             >
-              <span className="font-accent text-lg text-muted-foreground">{stat.label}</span>
-              <span className="font-display text-2xl text-primary">{stat.value}</span>
+              <span className="font-accent text-lg text-cream/75">{stat.label}</span>
+              <span className="font-display text-2xl text-accent">{stat.value}</span>
             </div>
           ))}
 
           {winnerStats.length > 0 && (
-            <div className="rounded-sm border border-border/80 bg-white/50 px-3 py-4">
-              <p className="mb-4 font-accent text-lg text-muted-foreground">
+            <div className="glass-inset px-3 py-4">
+              <p className="mb-4 font-accent text-lg text-cream/75">
                 {copy.winnerPrediction}
               </p>
               <div className="grid gap-4 sm:grid-cols-[7rem_1fr] sm:items-center lg:grid-cols-1">
                 <div
-                  className="mx-auto h-28 w-28 rounded-full border border-border shadow-inner"
+                  className="mx-auto h-28 w-28 rounded-full border border-cream/20 shadow-inner"
                   style={{
                     background: `conic-gradient(${winnerStats
                       .reduce(
@@ -641,11 +641,11 @@ const GameSection = () => {
                           className="h-3 w-3 shrink-0 rounded-full"
                           style={{ backgroundColor: winnerChartColors[index] }}
                         />
-                        <span className="truncate text-sm text-muted-foreground">
+                        <span className="truncate text-sm text-cream/75">
                           {stat.label[language]}
                         </span>
                       </span>
-                      <span className="font-display text-xl text-primary">
+                      <span className="font-display text-xl text-accent">
                         {stat.percentage}%
                       </span>
                     </div>
@@ -660,16 +660,14 @@ const GameSection = () => {
   );
 
   return (
-    <section id="jeu" className="wedding-section bg-secondary/30">
-      <div className="absolute -left-24 top-20 h-96 w-96 rounded-full bg-gold-light/35 blur-3xl" />
-      <div className="absolute -right-20 bottom-10 h-80 w-80 rounded-full bg-sea-light/40 blur-3xl" />
+    <section id="jeu" className="wedding-section">
       <HiddenHeart className="right-[14%] top-16 rotate-12" />
 
       <div className="wedding-container relative">
         <p className="section-eyebrow">{copy.eyebrow}</p>
         <h2 className="section-title">{copy.title}</h2>
         <div className="wedding-divider" />
-        <p className="mx-auto mb-12 max-w-2xl text-center text-muted-foreground md:text-lg">
+        <p className="section-intro">
           {copy.intro}
         </p>
 
@@ -679,11 +677,11 @@ const GameSection = () => {
             onClick={() => setOpen(true)}
             className="editorial-panel group block w-full text-center transition-transform duration-300 hover:-translate-y-1"
           >
-            <Gift className="mx-auto mb-5 h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-110" />
-            <span className="block font-display text-4xl font-medium text-foreground md:text-6xl">
+            <Gift className="mx-auto mb-5 h-10 w-10 text-accenttransition-transform duration-300 group-hover:scale-110" />
+            <span className="block font-display text-4xl font-medium text-cream md:text-6xl">
               {copy.title}
             </span>
-            <span className="mt-4 block font-accent text-2xl italic text-primary md:text-3xl">
+            <span className="mt-4 block font-accent text-2xl italic text-accentmd:text-3xl">
               {copy.reward}
             </span>
             <span className="btn-wedding mt-8">{copy.open}</span>
@@ -694,15 +692,15 @@ const GameSection = () => {
 
         {open && (
           <div
-            className="fixed inset-0 z-[80] flex items-center justify-center bg-foreground/70 px-4 py-6 backdrop-blur-sm"
+            className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 px-4 py-6 backdrop-blur-sm"
             role="dialog"
             aria-modal="true"
             aria-labelledby="wedding-game-title"
           >
-            <div className="relative max-h-[92vh] w-full max-w-6xl overflow-y-auto rounded-lg bg-background shadow-2xl shadow-foreground/30">
-              <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-border bg-background/95 px-5 py-4 backdrop-blur md:px-8">
+            <div className="wedding-modal relative max-h-[92vh] w-full max-w-6xl overflow-y-auto shadow-2xl">
+              <div className="wedding-modal-bar sticky top-0 z-10 flex items-center justify-between gap-4 px-5 py-4 md:px-8">
                 <div>
-                  <p className="font-accent text-sm uppercase tracking-[0.24em] text-primary/70">
+                  <p className="font-accent text-sm uppercase tracking-[0.24em] text-gold-light/80">
                     {copy.eyebrow}
                   </p>
                   <h3 id="wedding-game-title" className="font-display text-2xl md:text-3xl">
@@ -712,7 +710,7 @@ const GameSection = () => {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white/70 text-foreground transition-colors hover:border-primary hover:text-primary"
+                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-cream/30 bg-cream/10 text-cream transition-colors hover:border-accent hover:text-accent"
                   aria-label={copy.close}
                 >
                   <X className="h-5 w-5" />
@@ -727,7 +725,7 @@ const GameSection = () => {
                 <input
                   value={playerName}
                   onChange={(event) => setPlayerName(event.target.value)}
-                  className="w-full rounded-sm border border-border bg-white/75 px-4 py-3 font-body transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="glass-input"
                   placeholder={copy.teamPlaceholder}
                   required
                 />
@@ -739,7 +737,7 @@ const GameSection = () => {
                   type="email"
                   value={playerEmail}
                   onChange={(event) => setPlayerEmail(event.target.value)}
-                  className="w-full rounded-sm border border-border bg-white/75 px-4 py-3 font-body transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="glass-input"
                   placeholder={copy.emailPlaceholder}
                   required
                 />
@@ -747,24 +745,24 @@ const GameSection = () => {
             </div>
 
             {questionsByCategory.map((category) => (
-              <div key={category.id} className="space-y-5 border-t border-border/80 pt-7 first:border-t-0 first:pt-0">
+              <div key={category.id} className="space-y-5 border-t border-cream/15 pt-7 first:border-t-0 first:pt-0">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                  <h3 className="font-display text-2xl text-foreground">
+                  <h3 className="font-display text-2xl text-cream">
                     {copy.categories[category.id]}
                   </h3>
-                  <span className="rounded-full border border-accent/70 bg-accent/20 px-3 py-1 text-sm text-primary">
+                  <span className="rounded-full border border-accent/60 bg-accent/15 px-3 py-1 text-sm text-accent">
                     {category.weight} pts
                   </span>
                 </div>
 
                 {copy.notes[category.id] && (
-                  <p className="text-muted-foreground">{copy.notes[category.id]}</p>
+                  <p className="text-cream/75">{copy.notes[category.id]}</p>
                 )}
 
                 <div className="space-y-5">
                   {category.questions.map((question, index) => (
-                    <fieldset key={question.id} className="rounded-md border border-white/70 bg-white/45 p-4">
-                      <legend className="px-1 font-accent text-lg text-foreground">
+                    <fieldset key={question.id} className="glass-inset rounded-md p-4">
+                      <legend className="px-1 font-accent text-lg text-cream">
                         {index + 1}. {question.prompt[language]}
                       </legend>
 
@@ -773,10 +771,10 @@ const GameSection = () => {
                           {question.options.map((option) => (
                             <label
                               key={option.value}
-                              className={`cursor-pointer rounded-sm border px-4 py-3 transition-all ${
+                              className={`glass-choice ${
                                 answers[question.id] === option.value
-                                  ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/15"
-                                  : "border-border bg-background/70 hover:border-primary/50"
+                                  ? "glass-choice-active"
+                                  : ""
                               }`}
                             >
                               <input
@@ -804,7 +802,7 @@ const GameSection = () => {
 
                             return (
                               <label key={rankIndex} className="grid gap-2 sm:grid-cols-[3rem_1fr] sm:items-center">
-                                <span className="font-display text-2xl text-primary">
+                                <span className="font-display text-2xl text-accent">
                                   {rankIndex + 1}.
                                 </span>
                                 <select
@@ -817,7 +815,7 @@ const GameSection = () => {
                                       [question.id]: nextValues.join("|"),
                                     }));
                                   }}
-                                  className="w-full rounded-sm border border-border bg-background/75 px-4 py-3 font-body transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                                  className="glass-input"
                                   required
                                 >
                                   <option value="">{copy.rankPlaceholder}</option>
@@ -847,7 +845,7 @@ const GameSection = () => {
                               [question.id]: event.target.value,
                             }))
                           }
-                          className="mt-4 w-full rounded-sm border border-border bg-background/75 px-4 py-3 font-body transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                          className="mt-4 glass-input"
                           placeholder={copy.answerPlaceholder}
                           required
                         />
@@ -858,10 +856,10 @@ const GameSection = () => {
               </div>
             ))}
 
-            <div className="space-y-5 border-t border-border/80 pt-7">
-              <h3 className="font-display text-2xl text-foreground">{copy.bonusTitle}</h3>
-              <fieldset className="rounded-md border border-white/70 bg-white/45 p-4">
-                <legend className="px-1 font-accent text-lg text-foreground">
+            <div className="space-y-5 border-t border-cream/15 pt-7">
+              <h3 className="font-display text-2xl text-cream">{copy.bonusTitle}</h3>
+              <fieldset className="glass-inset rounded-md p-4">
+                <legend className="px-1 font-accent text-lg text-cream">
                   {bonusQuestion.prompt[language]}
                 </legend>
 
@@ -869,10 +867,10 @@ const GameSection = () => {
                   {bonusQuestion.options.map((option) => (
                     <label
                       key={option.value}
-                      className={`cursor-pointer rounded-sm border px-4 py-3 transition-all ${
+                      className={`glass-choice ${
                         answers[bonusQuestion.id] === option.value
-                          ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/15"
-                          : "border-border bg-background/70 hover:border-primary/50"
+                          ? "glass-choice-active"
+                          : ""
                       }`}
                     >
                       <input
@@ -904,7 +902,7 @@ const GameSection = () => {
             </div>
 
             {error && (
-              <p className="rounded-sm border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              <p className="rounded-sm border border-red-300/40 bg-red-400/15 px-4 py-3 text-sm text-red-100">
                 {error}
               </p>
             )}
@@ -912,12 +910,12 @@ const GameSection = () => {
 
                 <aside className="space-y-6">
             <div className="editorial-panel text-center">
-              <Sparkles className="mx-auto mb-4 h-9 w-9 text-primary" />
-              <p className="font-accent text-xl text-muted-foreground">{copy.score}</p>
-              <p className="font-display text-6xl text-foreground">
+              <Sparkles className="mx-auto mb-4 h-9 w-9 text-accent" />
+              <p className="font-accent text-xl text-cream/75">{copy.score}</p>
+              <p className="font-display text-6xl text-cream">
                 {score === null ? "--" : score}
               </p>
-              <p className="mt-3 text-sm uppercase tracking-[0.2em] text-primary/70">
+              <p className="mt-3 text-sm uppercase tracking-[0.2em] text-gold-light/80">
                 {score === null ? "100 pts" : copy.saved}
               </p>
             </div>
@@ -928,16 +926,16 @@ const GameSection = () => {
             </div>
 
             {participationOpen && (
-              <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/50 px-4 backdrop-blur-sm">
+              <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
                 <div
-                  className="w-full max-w-sm rounded-lg border border-border bg-background px-6 py-7 text-center shadow-2xl shadow-foreground/25"
+                  className="wedding-modal w-full max-w-sm px-6 py-7 text-center shadow-2xl"
                   role="alertdialog"
                   aria-modal="true"
                 >
                   <div className="mb-4 text-6xl" aria-hidden="true">
                     🎆
                   </div>
-                  <p className="font-display text-3xl text-foreground">
+                  <p className="font-display text-3xl text-cream">
                     {copy.participationTitle}
                   </p>
                   <button

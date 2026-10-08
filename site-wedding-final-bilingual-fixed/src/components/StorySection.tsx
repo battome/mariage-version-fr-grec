@@ -6,9 +6,7 @@ const StorySection = () => {
   const { t } = useLanguage();
 
   return (
-    <section id="notre-histoire" className="wedding-section bg-background">
-      <div className="absolute left-0 top-16 h-56 w-28 rounded-r-full bg-sea-light/45 blur-2xl" />
-      <div className="absolute right-0 bottom-12 h-72 w-32 rounded-l-full bg-gold-light/35 blur-2xl" />
+    <section id="notre-histoire" className="wedding-section">
       <HiddenHeart className="left-[9%] bottom-24 -rotate-12" />
 
       <div className="wedding-container relative">
@@ -25,11 +23,11 @@ const StorySection = () => {
             />
           </div>
 
-          <div className="editorial-panel space-y-6 text-foreground/80 leading-relaxed md:text-lg">
+          <div className="editorial-panel space-y-6 text-cream/85 leading-relaxed md:text-lg">
             {t.story.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
-            <p className="font-accent text-2xl italic text-primary">{t.story.closing}</p>
+            <p className="font-accent text-2xl italic text-accent">{t.story.closing}</p>
           </div>
         </div>
       </div>

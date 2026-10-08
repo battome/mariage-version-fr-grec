@@ -48,6 +48,11 @@
     --sea: 195 50% 55%;
     --sea-light: 195 40% 85%;
 
+    /* Teinte des surfaces en verre posées sur la vidéo. */
+    --glass: 24 30% 8%;
+    --halo: 0 2px 4px rgba(10, 6, 3, 0.9), 0 4px 24px rgba(10, 6, 3, 0.65), 0 0 60px rgba(10, 6, 3, 0.45);
+    --halo-soft: 0 1px 2px rgba(10, 6, 3, 0.85), 0 2px 14px rgba(10, 6, 3, 0.55);
+
     --font-display: 'Playfair Display', serif;
     --font-body: 'Lora', serif;
     --font-accent: 'Cormorant Garamond', serif;
@@ -69,11 +74,9 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-cream;
     font-family: var(--font-body);
-    background:
-      radial-gradient(circle at 12% 12%, hsl(var(--sea-light) / 0.45), transparent 28rem),
-      linear-gradient(180deg, hsl(var(--background)), hsl(var(--cream-dark) / 0.55) 48%, hsl(var(--background)));
+    background: #0b1020;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -82,22 +85,42 @@
 }
 
 @layer components {
+  /* Les sections n'ont aucun fond : la vidéo passe partout. Les grands
+     espacements donnent au film le temps de défiler entre deux blocs. */
   .wedding-section {
-    @apply relative overflow-hidden py-20 md:py-28 px-6;
+    @apply relative px-6 py-20 md:py-28;
+    width: min(100% - 2rem, 78rem);
+    margin: 22vh auto;
+  }
+
+  .wedding-section:last-of-type {
+    margin-bottom: 10vh;
+  }
+
+  .hero-section + .wedding-section {
+    margin-top: 70vh;
   }
 
   .wedding-container {
     @apply max-w-6xl mx-auto;
   }
 
-  .section-title {
-    font-family: var(--font-display);
-    @apply text-4xl md:text-5xl lg:text-6xl font-medium tracking-wide text-foreground text-center mb-4;
+  /* Texte éditorial : flottant, clair, sans cadre. */
+  .section-eyebrow {
+    font-family: var(--font-accent);
+    @apply text-base md:text-lg tracking-[0.28em] uppercase text-gold-light text-center mb-3;
+    text-shadow: var(--halo-soft);
   }
 
-  .section-subtitle {
-    font-family: var(--font-accent);
-    @apply text-lg md:text-xl text-muted-foreground text-center mb-12 italic;
+  .section-title {
+    font-family: var(--font-display);
+    @apply text-4xl md:text-5xl lg:text-6xl font-medium tracking-wide text-cream text-center mb-4;
+    text-shadow: var(--halo);
+  }
+
+  .section-intro {
+    @apply mx-auto mb-12 max-w-2xl text-center text-cream/85 md:text-lg;
+    text-shadow: var(--halo-soft);
   }
 
   .wedding-divider {
@@ -107,7 +130,8 @@
   .wedding-divider::before,
   .wedding-divider::after {
     content: "";
-    @apply absolute top-1/2 h-px w-10 bg-border;
+    @apply absolute top-1/2 h-px w-10;
+    background-color: hsl(var(--cream) / 0.4);
   }
 
   .wedding-divider::before {
@@ -118,51 +142,141 @@
     @apply left-full ml-4;
   }
 
-  .card-wedding {
-    @apply bg-card/90 rounded-lg p-8 md:p-10 shadow-xl shadow-primary/10 border border-white/70 backdrop-blur;
+  /* Bloc fonctionnel : verre sombre très léger, la vidéo reste lisible au
+     travers, le texte crème reste lisible dessus. */
+  .editorial-panel {
+    @apply relative rounded-lg p-7 md:p-10 text-cream;
+    background: hsl(var(--glass) / 0.34);
+    border: 1px solid hsl(var(--cream) / 0.18);
+    backdrop-filter: blur(14px) saturate(1.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.1);
+    box-shadow:
+      0 30px 80px -40px rgba(0, 0, 0, 0.8),
+      inset 0 1px 0 hsl(var(--cream) / 0.08);
+  }
+
+  .editorial-panel::before {
+    content: "";
+    @apply absolute inset-3 rounded-md pointer-events-none;
+    border: 1px solid hsl(var(--accent) / 0.3);
+  }
+
+  /* Sous-bloc à l'intérieur d'un panneau (lignes de score, groupes de
+     questions). */
+  .glass-inset {
+    @apply rounded-sm;
+    background: hsl(var(--cream) / 0.06);
+    border: 1px solid hsl(var(--cream) / 0.14);
+  }
+
+  .glass-input {
+    @apply w-full rounded-sm px-4 py-3 font-body text-cream transition-colors;
+    background: hsl(var(--cream) / 0.08);
+    border: 1px solid hsl(var(--cream) / 0.28);
+  }
+
+  .glass-input::placeholder {
+    color: hsl(var(--cream) / 0.45);
+  }
+
+  .glass-input:focus {
+    outline: none;
+    border-color: hsl(var(--accent));
+    box-shadow: 0 0 0 3px hsl(var(--accent) / 0.25);
+  }
+
+  /* Les listes natives des <select> suivent la couleur du champ sur
+     certains navigateurs : on force un rendu papier lisible. */
+  select.glass-input option {
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--cream));
+  }
+
+  .glass-choice {
+    @apply cursor-pointer rounded-sm px-4 py-3 text-cream transition-all;
+    background: hsl(var(--cream) / 0.08);
+    border: 1px solid hsl(var(--cream) / 0.28);
+  }
+
+  .glass-choice:hover {
+    border-color: hsl(var(--accent) / 0.8);
+  }
+
+  .glass-choice-active,
+  .glass-choice-active:hover {
+    background: hsl(var(--cream));
+    color: hsl(var(--foreground));
+    border-color: hsl(var(--cream));
+    box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.7);
+  }
+
+  .icon-disc {
+    @apply flex shrink-0 items-center justify-center rounded-full text-foreground;
+    background: hsl(var(--accent));
+    box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.7);
+  }
+
+  .glass-link {
+    @apply text-accent underline underline-offset-4 transition-colors hover:text-cream;
+    text-decoration-color: hsl(var(--accent) / 0.5);
   }
 
   .btn-wedding {
     font-family: var(--font-accent);
     @apply inline-flex items-center justify-center px-8 py-3 text-lg tracking-wider
-           bg-primary text-primary-foreground rounded-sm
+           bg-cream text-foreground rounded-sm
            transition-all duration-300
-           hover:opacity-90 hover:shadow-md;
+           hover:bg-white hover:shadow-lg;
   }
 
   .btn-wedding-outline {
     font-family: var(--font-accent);
     @apply inline-flex items-center justify-center px-8 py-3 text-lg tracking-wider
-           border-2 border-primary text-primary rounded-sm
+           border-2 border-cream/70 text-cream rounded-sm
            transition-all duration-300
-           hover:bg-primary hover:text-primary-foreground;
-  }
-
-  .section-eyebrow {
-    font-family: var(--font-accent);
-    @apply text-base md:text-lg tracking-[0.28em] uppercase text-primary/65 text-center mb-3;
-  }
-
-  .editorial-panel {
-    @apply relative rounded-lg border border-white/70 bg-background/80 p-7 md:p-10 shadow-2xl shadow-primary/10 backdrop-blur;
-  }
-
-  .editorial-panel::before {
-    content: "";
-    @apply absolute inset-3 rounded-md border border-accent/45 pointer-events-none;
+           hover:bg-cream hover:text-foreground;
   }
 
   .image-frame {
-    @apply relative rounded-lg p-3 bg-white/55 shadow-2xl shadow-primary/15;
+    @apply relative rounded-lg p-3;
+    background: hsl(var(--glass) / 0.3);
+    border: 1px solid hsl(var(--cream) / 0.18);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 30px 70px -36px rgba(0, 0, 0, 0.85);
   }
 
   .image-frame::before {
     content: "";
-    @apply absolute -inset-3 rounded-lg border border-accent/55;
+    @apply absolute -inset-3 rounded-lg pointer-events-none;
+    border: 1px solid hsl(var(--accent) / 0.45);
   }
 
   .image-frame img {
     @apply relative rounded-md w-full object-cover;
+  }
+
+  /* Barre de navigation une fois la page défilée, et menu mobile. */
+  .wedding-nav-bar {
+    background: hsl(var(--glass) / 0.55);
+    border-bottom: 1px solid hsl(var(--cream) / 0.1);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  /* Surface du quiz et de ses dialogues : presque opaque, le film ne doit
+     pas distraire pendant qu'on répond. */
+  .wedding-modal {
+    @apply rounded-lg text-cream;
+    background: hsl(var(--glass) / 0.96);
+    border: 1px solid hsl(var(--cream) / 0.15);
+  }
+
+  .wedding-modal-bar {
+    background: hsl(var(--glass) / 0.92);
+    border-bottom: 1px solid hsl(var(--cream) / 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 }
 

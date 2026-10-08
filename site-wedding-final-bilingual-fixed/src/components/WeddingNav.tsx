@@ -31,21 +31,16 @@ const WeddingNav = () => {
 
   const langButtonClass = (active: boolean) =>
     `inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
-      active
-        ? scrolled
-          ? "border-primary bg-primary text-primary-foreground"
-          : "border-primary-foreground/80 bg-primary-foreground/15 text-primary-foreground"
-        : scrolled
-          ? "border-border text-foreground/75 hover:border-primary/50"
-          : "border-primary-foreground/30 text-primary-foreground/80 hover:border-primary-foreground/70"
+      active ? "border-cream bg-cream text-foreground" : "border-cream/30 text-cream/80 hover:border-cream/70"
     }`;
+
+  const linkClass =
+    "font-accent text-sm tracking-[0.15em] uppercase text-cream/80 transition-colors hover:text-accent";
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-background/95 backdrop-blur-md shadow-sm py-3"
-          : "bg-transparent py-5"
+        scrolled ? "wedding-nav-bar py-3" : "bg-transparent py-5"
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between gap-4">
@@ -55,41 +50,31 @@ const WeddingNav = () => {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
-          className={`font-display text-xl tracking-wider transition-colors ${
-            scrolled ? "text-foreground" : "text-primary-foreground"
-          }`}
+          className="font-display text-xl tracking-wider text-cream"
         >
           A&A
         </a>
 
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <button
-              key={link.href}
-              onClick={() => handleClick(link.href)}
-              className={`font-accent text-sm tracking-[0.15em] uppercase transition-colors hover:text-accent ${
-                scrolled ? "text-foreground/70" : "text-primary-foreground/80"
-              }`}
-            >
+            <button key={link.href} onClick={() => handleClick(link.href)} className={linkClass}>
               {link.label}
             </button>
           ))}
         </div>
 
         <div className="hidden md:flex items-center gap-2">
-         <button onClick={() => setLanguage("fr")} className={langButtonClass(language === "fr")} aria-label="Français">
-  <span aria-hidden="true">🇫🇷</span>
-</button>
-<button onClick={() => setLanguage("el")} className={langButtonClass(language === "el")} aria-label="Ελληνικά">
-  <span aria-hidden="true">🇬🇷</span>
-</button>
+          <button onClick={() => setLanguage("fr")} className={langButtonClass(language === "fr")} aria-label="Français">
+            <span aria-hidden="true">🇫🇷</span>
+          </button>
+          <button onClick={() => setLanguage("el")} className={langButtonClass(language === "el")} aria-label="Ελληνικά">
+            <span aria-hidden="true">🇬🇷</span>
+          </button>
         </div>
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className={`md:hidden transition-colors ${
-            scrolled ? "text-foreground" : "text-primary-foreground"
-          }`}
+          className="md:hidden text-cream transition-colors"
           aria-label="Toggle menu"
         >
           {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -97,7 +82,7 @@ const WeddingNav = () => {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden bg-background/98 backdrop-blur-md border-t border-border">
+        <div className="md:hidden wedding-nav-bar">
           <div className="px-6 py-6 space-y-4">
             <div className="flex items-center gap-2 pb-2">
               <button onClick={() => setLanguage("fr")} className={langButtonClass(language === "fr")}>
@@ -114,7 +99,7 @@ const WeddingNav = () => {
               <button
                 key={link.href}
                 onClick={() => handleClick(link.href)}
-                className="block w-full text-left font-accent text-base tracking-[0.1em] uppercase text-foreground/70 hover:text-primary transition-colors"
+                className="block w-full text-left font-accent text-base tracking-[0.1em] uppercase text-cream/80 hover:text-accent transition-colors"
               >
                 {link.label}
               </button>
