@@ -119,6 +119,7 @@ const ScrollScenery = () => {
         preload="auto"
       />
       <div className="scenery-grade" />
+      <div className="scenery-dim" />
       <div className="scenery-vignette" />
     </div>
   );

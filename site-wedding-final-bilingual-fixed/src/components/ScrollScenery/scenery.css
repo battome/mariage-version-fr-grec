@@ -1,4 +1,10 @@
-/* Décor vidéo plein écran, derrière le site. */
+/* Décor vidéo plein écran, derrière le site.
+   Système à deux niveaux :
+   - la vidéo est assombrie de façon constante (filtre cinéma) ;
+   - le texte éditorial (eyebrow, titre, intro) flotte en clair, sans cadre,
+     avec un halo sombre ;
+   - les blocs fonctionnels (.editorial-panel, .card-wedding, .image-frame)
+     sont de vraies cartes en verre dépoli, claires, où le texte reste sombre. */
 .scenery {
   position: fixed;
   inset: 0;
@@ -20,50 +26,54 @@
 .scenery-video-bg {
   object-fit: cover;
   object-position: 50% 50%;
-  filter: blur(50px) saturate(1.1) brightness(0.75);
+  filter: blur(50px) saturate(1.1) brightness(0.7);
   transform: scale(1.15);
 }
 
-/* Premier plan : le carré source entier, jamais recadré. */
+/* Premier plan : l'image source entière, jamais recadrée. */
 .scenery-video-fg {
   object-fit: contain;
   object-position: 50% 50%;
 }
 
+/* Teinte chaude, pour garder la vidéo dans la palette du site. */
 .scenery-grade {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, hsl(var(--gold-light) / 0.16), hsl(var(--terracotta) / 0.1) 60%, hsl(var(--primary) / 0.2));
+  background: linear-gradient(180deg, hsl(var(--gold-light) / 0.18), hsl(var(--terracotta) / 0.12) 60%, hsl(var(--primary) / 0.22));
   mix-blend-mode: soft-light;
+}
+
+/* Assombrissement franc et constant : c'est lui qui garantit que le texte
+   clair reste lisible quel que soit le moment du film. */
+.scenery-dim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(22, 14, 9, 0.42);
 }
 
 .scenery-vignette {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(40, 25, 15, 0.35) 100%);
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(20, 12, 8, 0.55) 100%);
 }
 
-/* Lisibilité au-dessus du décor : du texte qui flotte, pas des cartes
-   opaques. On ne garde qu'un espacement entre sections (la vidéo doit
-   rester visible), et c'est aux panneaux (.editorial-panel, .card-wedding)
-   d'apporter un halo très léger derrière le texte. */
+/* ------------------------------------------------------------------ */
+/* Sections : aucun fond, juste l'espacement. Les sections ont chacune
+   leur propre fond Tailwind opaque (bg-background / bg-card / bg-secondary)
+   posé en JSX : il faut l'annuler, sinon la vidéo ne se voit jamais. */
 .scenery-active .wedding-section {
-  /* Les sections ont chacune leur propre fond Tailwind opaque
-     (bg-background / bg-card / bg-secondary) posé directement en JSX :
-     il faut l'annuler ici, sinon la vidéo ne se voit jamais. Le titre et
-     l'eyebrow sont des enfants directs de .wedding-section (pas dans
-     .editorial-panel), d'où le halo de texte posé ici aussi. */
-  background-color: hsl(var(--cream) / 0.12) !important;
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  background-color: transparent !important;
   width: min(100% - 2rem, 78rem);
   margin: 22vh auto;
+  color: hsl(var(--cream));
   text-shadow:
-    0 1px 3px hsl(var(--cream) / 1),
-    0 2px 20px hsl(var(--cream) / 0.9),
-    0 0 40px hsl(var(--cream) / 0.7);
+    0 1px 2px rgba(20, 12, 8, 0.85),
+    0 2px 14px rgba(20, 12, 8, 0.6),
+    0 0 36px rgba(20, 12, 8, 0.45);
 }
 .scenery-active .wedding-section:last-of-type {
   margin-bottom: 10vh;
@@ -72,35 +82,89 @@
   margin-top: 70vh;
 }
 
+/* Les taches de couleur décoratives des sections (pensées pour une page
+   crème) deviennent des halos pâles sur la vidéo : on les retire. */
+.scenery-active .wedding-section > div[class*="blur-"] {
+  display: none;
+}
+
 .scenery-active .scenery-content {
   position: relative;
   z-index: 1;
 }
 
-/* Les panneaux de texte deviennent un cadre à peine visible : juste assez
-   de voile et de flou pour la lisibilité, la vidéo doit rester lisible
-   derrière. Le halo clair (text-shadow) est ce qui fait vraiment tenir le
-   texte, pas le fond. */
-.scenery-active .editorial-panel,
-.scenery-active .card-wedding {
-  background-color: hsl(var(--cream) / 0.1) !important;
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  border-color: hsl(var(--cream) / 0.25) !important;
-  box-shadow: 0 16px 50px -38px rgba(20, 12, 8, 0.3);
-}
-.scenery-active .editorial-panel::before {
-  border-color: hsl(var(--accent) / 0.3) !important;
+/* Les cœurs cachés du jeu sont bruns à 35 % (pensés pour une page crème) :
+   sur la vidéo assombrie ils deviendraient introuvables. On les passe en
+   doré pâle, discret mais trouvable. */
+.scenery-active .wedding-section svg.lucide-heart {
+  color: hsl(var(--gold-light) / 0.5) !important;
 }
 
-/* Les photos gardent un passe-partout léger pour rester lisibles sur un
-   fond déjà chargé, mais beaucoup plus discret qu'avant. */
+/* ------------------------------------------------------------------ */
+/* Niveau 1 : texte éditorial flottant, clair, sans cadre. */
+.scenery-active .section-eyebrow {
+  color: hsl(var(--gold-light)) !important;
+}
+.scenery-active .section-title {
+  color: hsl(var(--cream)) !important;
+  text-shadow:
+    0 2px 4px rgba(20, 12, 8, 0.9),
+    0 4px 24px rgba(20, 12, 8, 0.7),
+    0 0 60px rgba(20, 12, 8, 0.5);
+}
+.scenery-active .section-subtitle,
+.scenery-active .wedding-container > p,
+.scenery-active .wedding-container > div:not(.editorial-panel):not(.card-wedding):not(.image-frame) > p {
+  color: hsl(var(--cream) / 0.92) !important;
+}
+.scenery-active .wedding-divider::before,
+.scenery-active .wedding-divider::after {
+  background-color: hsl(var(--cream) / 0.45);
+}
+
+/* Pied de page de la section contact : un bloc frère de .wedding-container,
+   posé directement dans la section, avec des couleurs "muted" pensées pour
+   une page crème. On le passe en clair lui aussi. */
+.scenery-active .wedding-section > div:not(.wedding-container) {
+  border-color: hsl(var(--cream) / 0.3) !important;
+}
+.scenery-active .wedding-section > div:not(.wedding-container) > p {
+  color: hsl(var(--cream) / 0.85) !important;
+}
+.scenery-active .wedding-section > div:not(.wedding-container) > p:first-child {
+  color: hsl(var(--cream)) !important;
+}
+.scenery-active .wedding-section > div:not(.wedding-container) > p:last-child {
+  color: hsl(var(--cream) / 0.6) !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Niveau 2 : cartes fonctionnelles en verre dépoli. Claires, confortables
+   à lire, texte sombre à l'intérieur. La vidéo transparaît encore à
+   travers le flou, mais ne gêne plus la lecture. */
+.scenery-active .editorial-panel,
+.scenery-active .card-wedding {
+  background-color: hsl(var(--cream) / 0.62) !important;
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  border-color: hsl(var(--cream) / 0.7) !important;
+  box-shadow:
+    0 28px 70px -30px rgba(20, 12, 8, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  color: hsl(var(--foreground));
+  text-shadow: none;
+}
+.scenery-active .editorial-panel::before {
+  border-color: hsl(var(--accent) / 0.55) !important;
+}
+
+/* Les photos gardent un passe-partout clair, cohérent avec les cartes. */
 .scenery-active .image-frame {
-  background-color: hsl(0 0% 100% / 0.28) !important;
-  box-shadow: 0 16px 40px -24px rgba(20, 12, 8, 0.4);
+  background-color: hsl(0 0% 100% / 0.55) !important;
+  box-shadow: 0 24px 60px -28px rgba(20, 12, 8, 0.6);
 }
 .scenery-active .image-frame::before {
-  border-color: hsl(var(--accent) / 0.35) !important;
+  border-color: hsl(var(--accent) / 0.6) !important;
 }
 
 @media (max-width: 767px) {
