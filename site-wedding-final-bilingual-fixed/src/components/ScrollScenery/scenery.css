@@ -32,15 +32,25 @@
   background: radial-gradient(ellipse at center, transparent 55%, rgba(40, 25, 15, 0.35) 100%);
 }
 
-/* Lisibilité des sections au-dessus du décor : cartes flottantes espacées */
+/* Lisibilité au-dessus du décor : du texte qui flotte, pas des cartes
+   opaques. On ne garde qu'un espacement entre sections (la vidéo doit
+   rester visible), et c'est aux panneaux (.editorial-panel, .card-wedding)
+   d'apporter un halo très léger derrière le texte. */
 .scenery-active .wedding-section {
-  background-color: hsl(var(--cream) / 0.9) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  /* Les sections ont chacune leur propre fond Tailwind opaque
+     (bg-background / bg-card / bg-secondary) posé directement en JSX :
+     il faut l'annuler ici, sinon la vidéo ne se voit jamais. Le titre et
+     l'eyebrow sont des enfants directs de .wedding-section (pas dans
+     .editorial-panel), d'où le halo de texte posé ici aussi. */
+  background-color: hsl(var(--cream) / 0.12) !important;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   width: min(100% - 2rem, 78rem);
   margin: 22vh auto;
-  border-radius: 1.5rem;
-  box-shadow: 0 30px 80px -30px rgba(40, 25, 15, 0.45), 0 0 0 1px hsl(var(--cream) / 0.6);
+  text-shadow:
+    0 1px 3px hsl(var(--cream) / 1),
+    0 2px 20px hsl(var(--cream) / 0.9),
+    0 0 40px hsl(var(--cream) / 0.7);
 }
 .scenery-active .wedding-section:last-of-type {
   margin-bottom: 10vh;
@@ -54,10 +64,35 @@
   z-index: 1;
 }
 
+/* Les panneaux de texte deviennent un cadre à peine visible : juste assez
+   de voile et de flou pour la lisibilité, la vidéo doit rester lisible
+   derrière. Le halo clair (text-shadow) est ce qui fait vraiment tenir le
+   texte, pas le fond. */
+.scenery-active .editorial-panel,
+.scenery-active .card-wedding {
+  background-color: hsl(var(--cream) / 0.1) !important;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border-color: hsl(var(--cream) / 0.25) !important;
+  box-shadow: 0 16px 50px -38px rgba(20, 12, 8, 0.3);
+}
+.scenery-active .editorial-panel::before {
+  border-color: hsl(var(--accent) / 0.3) !important;
+}
+
+/* Les photos gardent un passe-partout léger pour rester lisibles sur un
+   fond déjà chargé, mais beaucoup plus discret qu'avant. */
+.scenery-active .image-frame {
+  background-color: hsl(0 0% 100% / 0.28) !important;
+  box-shadow: 0 16px 40px -24px rgba(20, 12, 8, 0.4);
+}
+.scenery-active .image-frame::before {
+  border-color: hsl(var(--accent) / 0.35) !important;
+}
+
 @media (max-width: 767px) {
   .scenery-active .wedding-section {
     width: calc(100% - 1.25rem);
     margin: 16vh auto;
-    border-radius: 1.1rem;
   }
 }

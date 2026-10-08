@@ -60,6 +60,17 @@ const ScrollScenery = () => {
       return () => video.removeEventListener("loadedmetadata", onLoaded);
     }
 
+    // Scène du globe (0 → ~5 s) : la France et la Grèce sont en haut du
+    // cadre carré source. Un recadrage CSS centré les coupe sur un écran
+    // large, donc on remonte le point de recadrage pendant cette scène
+    // puis on revient au centre pour les scènes suivantes.
+    const GLOBE_SCENE_END = 4.6;
+    const updateCrop = (t: number) => {
+      const p = Math.min(Math.max(t / GLOBE_SCENE_END, 0), 1);
+      const y = 22 + p * 28; // 22% (globe) -> 50% (reste du film)
+      video.style.objectPosition = `50% ${y}%`;
+    };
+
     const tick = () => {
       if (duration > 0) {
         const progress = Math.min(Math.max(window.scrollY / endScroll, 0), 1);
@@ -69,6 +80,7 @@ const ScrollScenery = () => {
         if (Math.abs(video.currentTime - current) > 0.02 && !video.seeking) {
           video.currentTime = current;
         }
+        updateCrop(current);
       }
       raf = requestAnimationFrame(tick);
     };
