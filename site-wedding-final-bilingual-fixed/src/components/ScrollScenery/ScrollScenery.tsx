@@ -4,10 +4,10 @@ import "./scenery.css";
 
 /**
  * Décor plein écran, fixé derrière tout le site : une vidéo continue (Terre,
- * vol vers Athènes, Sounion, Plaka, Acropole, cathédrale) dont la lecture est
- * pilotée par la position de scroll, jusqu'à l'ancre `#hebergements`. Passé
- * cette ancre, la dernière image (intérieur de la cathédrale) reste fixe en
- * arrière-plan pour le reste du site.
+ * vol vers Athènes, oliviers, Sounion, Plaka, Acropole, cathédrale) dont la
+ * lecture est pilotée par la position de scroll, du haut de la page jusqu'en
+ * bas : la dernière image (intérieur de la cathédrale) n'est atteinte qu'à
+ * la toute fin du site.
  *
  * La source est en 16:9 (1280x720). Dès que l'écran n'a pas ce ratio (mobile
  * en portrait, écran très large), un simple `object-fit: cover` recadre et
@@ -15,8 +15,6 @@ import "./scenery.css";
  * jamais recadrée) et on comble les bandes vides avec une seconde copie de la
  * même vidéo, agrandie et floutée, qui joue le rôle de fond.
  */
-const END_ANCHOR = "#hebergements";
-
 const ScrollScenery = () => {
   const fgRef = useRef<HTMLVideoElement>(null);
   const bgRef = useRef<HTMLVideoElement>(null);
@@ -36,9 +34,7 @@ const ScrollScenery = () => {
     let primed = false;
 
     const computeEndScroll = () => {
-      const node = document.querySelector(END_ANCHOR);
-      const fallback = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
-      endScroll = node ? Math.max(node.getBoundingClientRect().top + window.scrollY, 1) : fallback;
+      endScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
     };
 
     const primeIOS = () => {
