@@ -13,7 +13,20 @@
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+/* Copie de fond : agrandie et très floutée, comble les bandes laissées par
+   le "contain" du premier plan sans jamais couper le cadrage réel. */
+.scenery-video-bg {
   object-fit: cover;
+  object-position: 50% 50%;
+  filter: blur(50px) saturate(1.1) brightness(0.75);
+  transform: scale(1.15);
+}
+
+/* Premier plan : le carré source entier, jamais recadré. */
+.scenery-video-fg {
+  object-fit: contain;
   object-position: 50% 50%;
 }
 

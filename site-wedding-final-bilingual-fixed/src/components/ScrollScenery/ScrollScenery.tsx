@@ -8,15 +8,25 @@ import "./scenery.css";
  * pilotée par la position de scroll, jusqu'à l'ancre `#hebergements`. Passé
  * cette ancre, la dernière image (intérieur de la cathédrale) reste fixe en
  * arrière-plan pour le reste du site.
+ *
+ * La source est carrée (960x960). Sur un écran large, un simple
+ * `object-fit: cover` ne garde qu'une bande centrale d'environ 47 % de la
+ * hauteur du carré, ce qui donne une impression de zoom excessif. On affiche
+ * donc le carré en entier (`contain`, jamais recadré) et on comble les
+ * bandes vides avec une seconde copie de la même vidéo, agrandie et floutée,
+ * qui joue le rôle de fond.
  */
 const END_ANCHOR = "#hebergements";
 
 const ScrollScenery = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const fgRef = useRef<HTMLVideoElement>(null);
+  const bgRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    const fg = fgRef.current;
+    const bg = bgRef.current;
+    if (!fg || !bg) return;
+    const videos = [fg, bg];
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -35,41 +45,32 @@ const ScrollScenery = () => {
     const primeIOS = () => {
       if (primed) return;
       primed = true;
-      const p = video.play();
-      if (p && typeof p.then === "function") {
-        p.then(() => video.pause()).catch(() => {
-          /* autoplay refusé : sans conséquence, on pilote par currentTime */
-        });
-      } else {
-        video.pause();
-      }
+      videos.forEach((v) => {
+        const p = v.play();
+        if (p && typeof p.then === "function") {
+          p.then(() => v.pause()).catch(() => {
+            /* autoplay refusé : sans conséquence, on pilote par currentTime */
+          });
+        } else {
+          v.pause();
+        }
+      });
     };
 
     const onLoaded = () => {
-      duration = video.duration || 0;
+      duration = fg.duration || 0;
       computeEndScroll();
       primeIOS();
       if (reduce) {
-        video.currentTime = duration;
+        videos.forEach((v) => (v.currentTime = duration));
       }
     };
-    video.addEventListener("loadedmetadata", onLoaded);
-    if (video.readyState >= 1) onLoaded();
+    fg.addEventListener("loadedmetadata", onLoaded);
+    if (fg.readyState >= 1) onLoaded();
 
     if (reduce) {
-      return () => video.removeEventListener("loadedmetadata", onLoaded);
+      return () => fg.removeEventListener("loadedmetadata", onLoaded);
     }
-
-    // Scène du globe (0 → ~5 s) : la France et la Grèce sont en haut du
-    // cadre carré source. Un recadrage CSS centré les coupe sur un écran
-    // large, donc on remonte le point de recadrage pendant cette scène
-    // puis on revient au centre pour les scènes suivantes.
-    const GLOBE_SCENE_END = 4.6;
-    const updateCrop = (t: number) => {
-      const p = Math.min(Math.max(t / GLOBE_SCENE_END, 0), 1);
-      const y = 22 + p * 28; // 22% (globe) -> 50% (reste du film)
-      video.style.objectPosition = `50% ${y}%`;
-    };
 
     const tick = () => {
       if (duration > 0) {
@@ -77,10 +78,11 @@ const ScrollScenery = () => {
         const target = progress * duration;
         current += (target - current) * 0.12;
         if (Math.abs(target - current) < 0.03) current = target;
-        if (Math.abs(video.currentTime - current) > 0.02 && !video.seeking) {
-          video.currentTime = current;
-        }
-        updateCrop(current);
+        videos.forEach((v) => {
+          if (Math.abs(v.currentTime - current) > 0.02 && !v.seeking) {
+            v.currentTime = current;
+          }
+        });
       }
       raf = requestAnimationFrame(tick);
     };
@@ -100,15 +102,16 @@ const ScrollScenery = () => {
       cancelAnimationFrame(resizeRaf);
       ro.disconnect();
       window.removeEventListener("resize", onResize);
-      video.removeEventListener("loadedmetadata", onLoaded);
+      fg.removeEventListener("loadedmetadata", onLoaded);
     };
   }, []);
 
   return (
     <div className="scenery" aria-hidden="true">
+      <video ref={bgRef} className="scenery-video scenery-video-bg" src="/video/journey.mp4" muted playsInline preload="auto" />
       <video
-        ref={videoRef}
-        className="scenery-video"
+        ref={fgRef}
+        className="scenery-video scenery-video-fg"
         src="/video/journey.mp4"
         poster={journeyPoster}
         muted
