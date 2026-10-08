@@ -9,12 +9,11 @@ import "./scenery.css";
  * cette ancre, la dernière image (intérieur de la cathédrale) reste fixe en
  * arrière-plan pour le reste du site.
  *
- * La source est carrée (960x960). Sur un écran large, un simple
- * `object-fit: cover` ne garde qu'une bande centrale d'environ 47 % de la
- * hauteur du carré, ce qui donne une impression de zoom excessif. On affiche
- * donc le carré en entier (`contain`, jamais recadré) et on comble les
- * bandes vides avec une seconde copie de la même vidéo, agrandie et floutée,
- * qui joue le rôle de fond.
+ * La source est en 16:9 (1280x720). Dès que l'écran n'a pas ce ratio (mobile
+ * en portrait, écran très large), un simple `object-fit: cover` recadre et
+ * donne une impression de zoom. On affiche donc l'image entière (`contain`,
+ * jamais recadrée) et on comble les bandes vides avec une seconde copie de la
+ * même vidéo, agrandie et floutée, qui joue le rôle de fond.
  */
 const END_ANCHOR = "#hebergements";
 
