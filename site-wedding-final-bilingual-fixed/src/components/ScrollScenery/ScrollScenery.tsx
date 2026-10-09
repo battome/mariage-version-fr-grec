@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import journeyPoster from "@/assets/scenery/journey-poster.jpg";
+import journeyPosterPortrait from "@/assets/scenery/journey-poster-portrait.jpg";
 import "./scenery.css";
 
 /**
@@ -9,15 +10,35 @@ import "./scenery.css";
  * bas : la dernière image (intérieur de la cathédrale) n'est atteinte qu'à
  * la toute fin du site.
  *
- * La source est en 16:9 (1280x720). Dès que l'écran n'a pas ce ratio (mobile
- * en portrait, écran très large), un simple `object-fit: cover` recadre et
- * donne une impression de zoom. On affiche donc l'image entière (`contain`,
- * jamais recadrée) et on comble les bandes vides avec une seconde copie de la
- * même vidéo, agrandie et floutée, qui joue le rôle de fond.
+ * Deux montages du même film existent : 16:9 pour les écrans en paysage,
+ * 9:16 (généré séparément, mêmes scènes) pour les écrans en portrait. Dans
+ * les deux cas l'image est affichée entière (`contain`, jamais recadrée) et
+ * les bandes restantes sont comblées par une seconde copie de la même vidéo,
+ * agrandie et floutée, qui joue le rôle de fond.
  */
+const SOURCES = {
+  landscape: { src: "/video/journey.mp4", poster: journeyPoster },
+  portrait: { src: "/video/journey-portrait.mp4", poster: journeyPosterPortrait },
+} as const;
+
+type Variant = keyof typeof SOURCES;
+
+const PORTRAIT_QUERY = "(orientation: portrait)";
+
+const currentVariant = (): Variant =>
+  window.matchMedia(PORTRAIT_QUERY).matches ? "portrait" : "landscape";
+
 const ScrollScenery = () => {
   const fgRef = useRef<HTMLVideoElement>(null);
   const bgRef = useRef<HTMLVideoElement>(null);
+  const [variant, setVariant] = useState<Variant>(currentVariant);
+
+  useEffect(() => {
+    const query = window.matchMedia(PORTRAIT_QUERY);
+    const onChange = () => setVariant(currentVariant());
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
     const fg = fgRef.current;
@@ -99,16 +120,19 @@ const ScrollScenery = () => {
       window.removeEventListener("resize", onResize);
       fg.removeEventListener("loadedmetadata", onLoaded);
     };
-  }, []);
+  }, [variant]);
+
+  const { src, poster } = SOURCES[variant];
 
   return (
     <div className="scenery" aria-hidden="true">
-      <video ref={bgRef} className="scenery-video scenery-video-bg" src="/video/journey.mp4" muted playsInline preload="auto" />
+      <video key={`bg-${variant}`} ref={bgRef} className="scenery-video scenery-video-bg" src={src} muted playsInline preload="auto" />
       <video
+        key={`fg-${variant}`}
         ref={fgRef}
         className="scenery-video scenery-video-fg"
-        src="/video/journey.mp4"
-        poster={journeyPoster}
+        src={src}
+        poster={poster}
         muted
         playsInline
         preload="auto"
