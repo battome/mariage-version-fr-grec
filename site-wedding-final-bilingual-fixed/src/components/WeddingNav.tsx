@@ -63,7 +63,7 @@ const WeddingNav = () => {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <button onClick={() => setLanguage("fr")} className={langButtonClass(language === "fr")} aria-label="Français">
             <span aria-hidden="true">🇫🇷</span>
           </button>
@@ -84,17 +84,6 @@ const WeddingNav = () => {
       {menuOpen && (
         <div className="md:hidden wedding-nav-bar">
           <div className="px-6 py-6 space-y-4">
-            <div className="flex items-center gap-2 pb-2">
-              <button onClick={() => setLanguage("fr")} className={langButtonClass(language === "fr")}>
-                <span aria-hidden="true">🇫🇷</span>
-                <span>FR</span>
-              </button>
-              <button onClick={() => setLanguage("el")} className={langButtonClass(language === "el")}>
-                <span aria-hidden="true">🇬🇷</span>
-                <span>GR</span>
-              </button>
-            </div>
-
             {navLinks.map((link) => (
               <button
                 key={link.href}
