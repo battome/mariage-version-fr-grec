@@ -661,7 +661,7 @@ const GameSection = () => {
 
   return (
     <section id="jeu" className="wedding-section">
-      <HiddenHeart className="right-[14%] top-16 rotate-12" />
+      <HiddenHeart className="right-[14%] -top-10 md:top-16 rotate-12" />
 
       <div className="wedding-container relative">
         <p className="section-eyebrow">{copy.eyebrow}</p>

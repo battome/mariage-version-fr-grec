@@ -55,7 +55,7 @@ const RSVPSection = () => {
 
   return (
     <section id="rsvp" className="wedding-section">
-      <HiddenHeart className="left-[11%] top-32 rotate-12" />
+      <HiddenHeart className="left-[11%] -top-10 md:top-32 rotate-12" />
 
       <div className="wedding-container relative">
         <p className="section-eyebrow">{t.rsvp.eyebrow}</p>

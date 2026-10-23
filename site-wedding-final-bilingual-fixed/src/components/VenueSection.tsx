@@ -8,7 +8,7 @@ const VenueSection = () => {
 
   return (
     <section id="le-lieu" className="wedding-section">
-      <HiddenHeart className="right-[8%] bottom-20 rotate-6" />
+      <HiddenHeart className="right-[8%] -top-10 md:top-auto md:bottom-20 rotate-6" />
 
       <div className="wedding-container relative">
         <p className="section-eyebrow">{t.venue.eyebrow}</p>

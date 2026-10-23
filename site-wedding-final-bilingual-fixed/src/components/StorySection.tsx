@@ -7,7 +7,7 @@ const StorySection = () => {
 
   return (
     <section id="notre-histoire" className="wedding-section">
-      <HiddenHeart className="left-[9%] bottom-24 -rotate-12" />
+      <HiddenHeart className="left-[9%] -top-10 md:top-auto md:bottom-24 -rotate-12" />
 
       <div className="wedding-container relative">
         <p className="section-eyebrow">{t.story.eyebrow}</p>

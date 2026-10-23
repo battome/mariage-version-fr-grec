@@ -8,7 +8,7 @@ const TransportSection = () => {
 
   return (
     <section id="transport" className="wedding-section">
-      <HiddenHeart className="right-[22%] top-40 -rotate-6" />
+      <HiddenHeart className="right-[22%] -top-10 md:top-40 -rotate-6" />
 
       <div className="wedding-container relative">
         <p className="section-eyebrow">{t.transport.eyebrow}</p>

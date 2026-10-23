@@ -7,7 +7,7 @@ const ContactSection = () => {
 
   return (
     <section id="contact" className="wedding-section">
-      <HiddenHeart className="right-[16%] top-24 -rotate-12" />
+      <HiddenHeart className="right-[16%] -top-10 md:top-24 -rotate-12" />
       <div className="wedding-container text-center relative">
         <p className="section-eyebrow">{t.contact.eyebrow}</p>
         <h2 className="section-title">{t.contact.title}</h2>
