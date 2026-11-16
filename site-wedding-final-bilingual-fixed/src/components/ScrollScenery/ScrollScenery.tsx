@@ -13,14 +13,12 @@ import "./scenery.css";
  * Deux montages du même film existent : 16:9 pour les écrans en paysage,
  * 9:16 (généré séparément, mêmes scènes) pour les écrans en portrait. Dans
  * les deux cas l'image est affichée entière (`contain`, jamais recadrée) et
- * les bandes restantes sont comblées par une seconde vidéo (mêmes images,
- * encodée à basse résolution puisqu'elle est floutée) agrandie qui joue le
- * rôle de fond — décoder et flouter du 1280x720 en continu pendant le scroll
- * faisait ramer le site, un flux à 320x180 coûte une fraction de ce CPU/GPU.
+ * les bandes restantes sont comblées par une seconde copie de la même vidéo,
+ * agrandie et floutée, qui joue le rôle de fond.
  */
 const SOURCES = {
-  landscape: { src: "/video/journey.mp4", bgSrc: "/video/journey-bg.mp4", poster: journeyPoster },
-  portrait: { src: "/video/journey-portrait.mp4", bgSrc: "/video/journey-portrait-bg.mp4", poster: journeyPosterPortrait },
+  landscape: { src: "/video/journey.mp4", poster: journeyPoster },
+  portrait: { src: "/video/journey-portrait.mp4", poster: journeyPosterPortrait },
 } as const;
 
 type Variant = keyof typeof SOURCES;
@@ -124,11 +122,11 @@ const ScrollScenery = () => {
     };
   }, [variant]);
 
-  const { src, bgSrc, poster } = SOURCES[variant];
+  const { src, poster } = SOURCES[variant];
 
   return (
     <div className="scenery" aria-hidden="true">
-      <video key={`bg-${variant}`} ref={bgRef} className="scenery-video scenery-video-bg" src={bgSrc} muted playsInline preload="auto" />
+      <video key={`bg-${variant}`} ref={bgRef} className="scenery-video scenery-video-bg" src={src} muted playsInline preload="auto" />
       <video
         key={`fg-${variant}`}
         ref={fgRef}
