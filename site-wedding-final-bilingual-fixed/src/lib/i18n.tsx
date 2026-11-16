@@ -96,7 +96,7 @@ const translations = {
       eyebrow: "Répondez",
       title: "Confirmer sa Présence",
       intro:
-        "Merci de nous confirmer votre présence avant le 30 janvier 2027 afin que nous puissions organiser au mieux cette journée.",
+        "Merci de nous confirmer votre présence avant le 30 janvier 2027 afin que nous puissions organiser au mieux cette journée. Dans un souci d'organisation et de place, les enfants ne sont malheureusement pas conviés le soir du mariage.",
       thankYouTitle: "Merci !",
       thankYouText:
         "Votre réponse a bien été envoyée. Nous avons hâte de vous retrouver à Athènes !",
@@ -221,7 +221,7 @@ const translations = {
       eyebrow: "Απαντήστε",
       title: "Επιβεβαίωση Παρουσίας",
       intro:
-        "Παρακαλούμε επιβεβαιώστε την παρουσία σας έως τις 30 Ιανουαρίου 2027, ώστε να οργανώσουμε με τον καλύτερο τρόπο αυτή την ημέρα.",
+        "Παρακαλούμε επιβεβαιώστε την παρουσία σας έως τις 30 Ιανουαρίου 2027, ώστε να οργανώσουμε με τον καλύτερο τρόπο αυτή την ημέρα. Λόγω περιορισμένου χώρου, τα παιδιά δυστυχώς δεν είναι προσκεκλημένα το βράδυ του γάμου.",
       thankYouTitle: "Ευχαριστούμε!",
       thankYouText:
         "Η απάντησή σας στάλθηκε επιτυχώς. Ανυπομονούμε να σας δούμε στην Αθήνα!",
