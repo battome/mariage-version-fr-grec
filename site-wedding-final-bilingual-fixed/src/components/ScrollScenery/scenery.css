@@ -22,7 +22,9 @@
 .scenery-video-bg {
   object-fit: cover;
   object-position: 50% 50%;
-  filter: blur(50px) saturate(1.1) brightness(0.7);
+  /* La source est déjà en 320x180 (floutée, le détail ne compte pas) : un
+     flou plus léger suffit et coûte beaucoup moins cher pendant le scroll. */
+  filter: blur(28px) saturate(1.1) brightness(0.7);
   transform: scale(1.15);
 }
 
