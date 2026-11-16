@@ -25,6 +25,9 @@ const SOURCES = {
 
 type Variant = keyof typeof SOURCES;
 
+/** Images fixes de secours, une par scène : /video/stills/<format>-<n>.jpg. */
+const STILL_COUNT = 10;
+
 const PORTRAIT_QUERY = "(orientation: portrait)";
 
 const currentVariant = (): Variant =>
@@ -34,6 +37,9 @@ const ScrollScenery = () => {
   const fgRef = useRef<HTMLVideoElement>(null);
   const bgRef = useRef<HTMLVideoElement>(null);
   const [variant, setVariant] = useState<Variant>(currentVariant);
+  /* Index de l'image fixe affichée quand le navigateur refuse de lire la vidéo
+     (mode économie d'énergie d'iOS, par exemple) ; null tant que la vidéo joue. */
+  const [still, setStill] = useState<number | null>(null);
 
   useEffect(() => {
     const query = window.matchMedia(PORTRAIT_QUERY);
@@ -55,23 +61,43 @@ const ScrollScenery = () => {
     let current = 0;
     let raf = 0;
     let primed = false;
+    let blocked = false;
+    let stillIndex = -1;
 
     const computeEndScroll = () => {
       endScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
     };
 
+    const tryPlay = () => Promise.all(videos.map((v) => v.play().then(() => v.pause())));
+
+    const removeGestureListeners = () => {
+      window.removeEventListener("touchend", onGesture);
+      window.removeEventListener("click", onGesture);
+    };
+
+    /* Un appui volontaire autorise la lecture même quand elle est bloquée. */
+    function onGesture() {
+      tryPlay()
+        .then(() => {
+          blocked = false;
+          stillIndex = -1;
+          setStill(null);
+          removeGestureListeners();
+        })
+        .catch(() => {
+          /* toujours refusé : on reste sur les images fixes */
+        });
+    }
+
     const primeIOS = () => {
       if (primed) return;
       primed = true;
-      videos.forEach((v) => {
-        const p = v.play();
-        if (p && typeof p.then === "function") {
-          p.then(() => v.pause()).catch(() => {
-            /* autoplay refusé : sans conséquence, on pilote par currentTime */
-          });
-        } else {
-          v.pause();
-        }
+      tryPlay().catch(() => {
+        /* Lecture refusée : sans elle, iOS n'affiche aucune image de la vidéo
+           quand on change currentTime (écran noir). On passe aux images fixes. */
+        blocked = true;
+        window.addEventListener("touchend", onGesture);
+        window.addEventListener("click", onGesture);
       });
     };
 
@@ -90,9 +116,18 @@ const ScrollScenery = () => {
       return () => fg.removeEventListener("loadedmetadata", onLoaded);
     }
 
+    computeEndScroll();
+    primeIOS();
+
     const tick = () => {
-      if (duration > 0) {
-        const progress = Math.min(Math.max(window.scrollY / endScroll, 0), 1);
+      const progress = Math.min(Math.max(window.scrollY / endScroll, 0), 1);
+      if (blocked) {
+        const next = Math.round(progress * (STILL_COUNT - 1));
+        if (next !== stillIndex) {
+          stillIndex = next;
+          setStill(next);
+        }
+      } else if (duration > 0) {
         const target = progress * duration;
         current += (target - current) * 0.12;
         if (Math.abs(target - current) < 0.03) current = target;
@@ -120,6 +155,7 @@ const ScrollScenery = () => {
       cancelAnimationFrame(resizeRaf);
       ro.disconnect();
       window.removeEventListener("resize", onResize);
+      removeGestureListeners();
       fg.removeEventListener("loadedmetadata", onLoaded);
     };
   }, [variant]);
@@ -139,6 +175,17 @@ const ScrollScenery = () => {
         playsInline
         preload="auto"
       />
+      {still !== null &&
+        Array.from({ length: STILL_COUNT }, (_, i) =>
+          Math.abs(i - still) <= 1 ? (
+            <img
+              key={i}
+              src={`/video/stills/${variant}-${i}.jpg`}
+              alt=""
+              className={`scenery-still${i === still ? " is-current" : ""}`}
+            />
+          ) : null,
+        )}
       <div className="scenery-grade" />
       <div className="scenery-dim" />
       <div className="scenery-vignette" />

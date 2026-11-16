@@ -34,6 +34,20 @@
   object-position: 50% 50%;
 }
 
+/* Images fixes de secours quand la lecture vidéo est refusée. */
+.scenery-still {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.scenery-still.is-current {
+  opacity: 1;
+}
+
 /* Teinte chaude, pour garder la vidéo dans la palette du site. */
 .scenery-grade {
   position: absolute;
